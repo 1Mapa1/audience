@@ -1,0 +1,9 @@
+export { Header } from "./Header";
+export { Button } from "./Button";
+export { Img } from "./Img";
+export { List } from "./List";
+export { Text } from "./Text";
+export { LetterLast } from "./Text";
+export { HighText } from "./HighText";
+export { TextBlock } from "./TextBlock"
+export { InstructBlock } from "./InstructBlock"
