@@ -1,9 +1,39 @@
 import React from "react";
-import { Img, TextBlock, HighText, Header, Text, InstructBlock} from "components";
+import { Img, TextBlock, HighText, Header, Instruction, Text, Button, Building, ListBuilding} from "components";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowRight, faArrowDown, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import { faArrowDown } from '@fortawesome/free-solid-svg-icons';
+
 
 const Page = () => {
+
+  const buildings = [
+    {
+      urlImg: "images/first.png",
+      build: "1-Й КОРПУС",
+      adres: "Малая Калужская улица, 1"
+    },
+    {
+      urlImg: "images/first.png",
+      build: "2-Й КОРПУС",
+      adres: "Малый Калужский переулок, 2с7"
+    },
+    {
+      urlImg: "images/first.png",
+      build: "3-Й КОРПУС",
+      adres: "Малый Калужский переулок, 2с6"
+    },
+    {
+      urlImg: "images/first.png",
+      build: "4-Й КОРПУС",
+      adres: "Малый Калужский переулок, 2с4"
+    },
+    {
+      urlImg: "images/first.png",
+      build: "6-Й КОРПУС",
+      adres: "Малый Калужский переулок, 2с5"
+    }
+  ]
+
   return (
     <>
       <div className="bg-white-A700 font-sourcesanspromx-auto pb-[27px] px-[27px] md:px-[0px] relative w-full">
@@ -13,7 +43,7 @@ const Page = () => {
             src="images/img_121.png"
             alt="OneHundredTwentyOne"
           />
-          <Header >
+          <Header>
           </Header>
         </div>
         
@@ -22,66 +52,30 @@ const Page = () => {
             ПРАВИЛА
           </HighText>
 
-          <TextBlock></TextBlock>
-
+          <TextBlock />
         </div>
 
         <div className="max-w-[1360px] mt-auto mx-auto md:px-5 w-full">
           <HighText spacing="tracking-[50px] md:tracking-[20px] sm:tracking-[10px]">
             Инструкция
           </HighText>
-          <div className="my-0 relative shadow-bs rounded-[20px] w-full">
-            <div className="m-auto w-full">
-              <Img
-                  className="h-[600px] m-auto object-cover rounded-[20px] w-full md:h-[300px] sm:h-[350px]"
-                  src="images/img_image4_734x1390.png"
-                  alt="imageFour"
-              />
-            </div>
-            <div className="absolute max-h-max inset-[0] items-center justify-between m-auto w-[86%] sm:items-center">
-              <div className="grid sm:min-w-[320px] sm:px-[10px] instruction-block">
-                <InstructBlock area="block1">
-                  Ищем подходящую по времени и дате свободную аудиторию
-                </InstructBlock>
-                
-                <FontAwesomeIcon icon={faArrowRight} style={{gridArea: "arrow1", color: "white", fontSize: "50px", fontWeight: 'bold'}}/>
 
-                <InstructBlock area="block2">
-                  Бронируем аудиторию на сайте, указывая все атрибуты
-                </InstructBlock>
-
-                <FontAwesomeIcon icon={faArrowRight} style={{gridArea: "arrow2", color: "white", fontSize: "50px"}}/>
-
-                <InstructBlock area="block3">
-                  Составляем служебное письмо на кого-то
-                </InstructBlock>
-
-                <FontAwesomeIcon icon={faArrowDown} style={{gridArea: "arrow3", color: "white", fontSize: "50px"}}/>
-
-                <InstructBlock area="block4">
-                  Отправляем служебку для подписи и подтверждения бронирования на сайте
-                </InstructBlock>
-                
-                <FontAwesomeIcon icon={faArrowLeft} style={{gridArea: "arrow4", color: "white", fontSize: "50px"}}/>
-
-                <InstructBlock area="block5">
-                  Ждем одобрения и  проверяем статус брони
-                </InstructBlock>
-
-                
-                <FontAwesomeIcon icon={faArrowLeft} style={{gridArea: "arrow5", color: "white", fontSize: "50px"}} size="10px"/>
-
-                <InstructBlock area="block6">
-                  Если одобрили - радуемся и пользуемся, если нет - не судьба
-                </InstructBlock>
-
-                
-              </div>
-              
+          <Instruction />
+        </div>
+        <div className="max-w-[1360px] mt-auto mx-auto md:px-5 w-full">
+          <HighText spacing="tracking-[30px] md:tracking-[20px] sm:tracking-[10px]">
+            Бронирование
+          </HighText>
+          <div className="flex flex-col items-center">
+            <Text className="text-[20px] font-semibold">Знаете что ищите? Тогда забронируйте сразу</Text>
+            <FontAwesomeIcon icon={faArrowDown} style={{color: "grey", fontSize: "60px"}} className="my-8"/>
+            <Button className="w-[300px] text-[18px] mb-8">Забронировать</Button>
+            <Text className="text-[20px] font-semibold">Или посмотрите что есть</Text>
+            <div className="flex flex-col items-center gap-10">
+              <Text className="text-[30px] font-bold my-12">Доступные корпуса</Text>
+              <ListBuilding items={buildings}></ListBuilding>
             </div>
           </div>
-
-
         </div>
         
       </div>

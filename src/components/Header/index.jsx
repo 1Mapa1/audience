@@ -2,11 +2,11 @@ import React from "react";
 import { Link } from "react-router-dom"; 
 import { Img, Text} from "components";
 
-const Header = () => {
+const Header = (shadow) => {
     return (
         <>
-            <header className="absolute flex inset-x-[0] items-center justify-center mx-auto top-[0]">
-                <div className="bg-white-A700 flex flex-row sm:gap-10 items-center p-5 rounded-bl-[20px] rounded-br-[20px] header-block">
+            <header className={"absolute flex inset-x-[0] items-center justify-center mx-auto top-[0]"}>
+                <div className={"bg-white-A700 flex flex-row sm:gap-10 items-center p-5 rounded-bl-[20px] rounded-br-[20px] header-block" + (shadow ? " shadow-md": "")}>
                     <Img
                         className="mb-[9px] ml-1.5 sm:ml-[0] object-cover img-logo"
                         src="images/img_image1.png"

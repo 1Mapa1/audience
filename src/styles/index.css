@@ -1,3 +1,13 @@
+.custom-dot-list-style .react-multi-carousel-dot button {
+  border: 2px solid #0075bb; /* Цвет границы для невыбранных точек */
+}
+
+.custom-dot-list-style .react-multi-carousel-dot--active button {
+  border: 2px solid #0075bb; /* Цвет границы для выбранной точки */
+  background-color: #0075BB;
+}
+
+
 .img-logo {
   height: clamp(30px, 8vw, 50px);
 }

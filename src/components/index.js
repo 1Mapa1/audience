@@ -7,3 +7,8 @@ export { LetterLast } from "./Text";
 export { HighText } from "./HighText";
 export { TextBlock } from "./TextBlock"
 export { InstructBlock } from "./InstructBlock"
+export { Instruction } from "./Instruction"
+export { Building } from "./Building"
+export { ListBuilding } from "./ListBuilding"
+export { Audience } from "./Audience"
+export { ListAudience } from "./ListAudience"
