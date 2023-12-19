@@ -1,17 +1,12 @@
 import React, {useState, useEffect} from 'react';
 import Select from 'react-select';
-import { Button, Header} from "components";
+import { Button, Header, Modal} from "components";
 // import { loadFreeTime } from 'repo/loadFreeTime';
 // import { uploadScheduleSelect } from 'repo/uploadScheduleSelect';
-
-const options = [
-  { value: 1, label: 'Понедельник' },
-  { value: 2, label: 'Вторник' },
-  { value: 3, label: 'Среда' },
-  { value: 4, label: 'Четверг' },
-  { value: 5, label: 'Пятница' },
-  { value: 6, label: 'Суббота' },
-];
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import dayjs from 'dayjs';
 
 const optionsBuilding = [
   { value: 1, label: '1-й корпус' },
@@ -22,37 +17,36 @@ const optionsBuilding = [
   { value: 6, label: '6-й корпус' },
 ];
 
-const ColorOption = ({ value, selected, onSelect, last }) => {
-  const backgroundColor = selected ? 'rgba(0, 118, 187, 0.103)' : 'white';
-  const borderStyle = selected ? '2px solid rgb(0, 118, 187)' : '1px solid rgba(0, 0, 0, 0.5)';
-  let borderStyleRight = selected ? '2px solid rgb(0, 118, 187)' : 'none';
-  
-  if (last) {
-    borderStyleRight = selected ? '2px solid rgb(0, 118, 187)' : '1px solid rgba(0, 0, 0, 0.5)';
-  }
-
-  return (
-    <td
-    style={{ backgroundColor, cursor: 'pointer', border: borderStyle, borderRight: borderStyleRight }}
-    onClick={() => onSelect(value)}
-    className='text-xs text-time'
-  >
-    {value} ч.
-  </td>
-  );
+const customStyles = {
+  control: (provided) => ({
+    ...provided,
+    height: '56px',
+    minHeight: '56px',
+  }),
+  valueContainer: (provided) => ({
+    ...provided,
+    height: '56px',
+  }),
+  input: (provided) => ({
+    ...provided,
+    position: 'absolute',
+  }),
 };
 
+
+
 const Reservation = () => {
-  const [selectedOption, setSelectedOption] = useState(options[0]);
+
+  const [selectedDate, setSelectedDate] = useState(dayjs());
+  const [modalActive, setModalActive] = useState(false);
+
   const [selectedOptionBuilding, setSelectedOptionBuilding] = useState(optionsBuilding[0]);
   const [selectedDataRow, setSelectedDataRow] = useState(null);
-  const [selectedOptionNumber, setSelectedOptionNumber] = useState(null);
-  const [optionsNumber, setOptionsNumber] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
-  const [bigData, setBigData] = useState(null);
   const [data, setData] = useState([ {
     location: {
       name: "пример"
     },
+    date: "14.12.23",
     starting_time: "12",
     end_time: "18",
     isSelected: false
@@ -61,6 +55,7 @@ const Reservation = () => {
     location: {
       name: "пример 2"
     },
+    date: "15.12.23",
     starting_time: "17",
     end_time: "18",
     isSelected: false
@@ -77,79 +72,33 @@ const Reservation = () => {
     loadBigdata();
   }, []);
 
-  useEffect(() => {
-    setSelectedOptionNumber(null);
-  }, [optionsNumber]);
-
 
   const handleChangeBuild = (selected) => {
     setSelectedOptionBuilding(selected);
   }
 
-  const handleChange = async (selected) => {
-    setSelectedOption(selected);
-    
-    const selectedDay = selected.value;
-    
-    let newData = [];
-    switch (selectedDay) {
-      case 1:
-        newData = bigData[0].schedule_entries
-        break;
-      case 2:
-        newData = bigData[1].schedule_entries
-        break;
-      case 3:
-        newData = bigData[2].schedule_entries
-        break;
-      case 4:
-        newData = bigData[3].schedule_entries
-        break;
-      case 5:
-        newData = bigData[4].schedule_entries
-        break;
-      case 6:
-        newData = bigData[5].schedule_entries
-        break;
-    }
-    newData.map((row) => {
-      row.isSelected = false;
-    })
-    
-    setData(newData);
-  };
+  const handleChange = (selected) => {
 
-  const handleSelect = (value) => {
-    setSelectedOptionNumber(value);
-  };
+    const formattedDate = selected.format('DD.MM.YY');
+    console.log(formattedDate);
 
-  const handleSubmit = (value) => {
-    
-    // uploadScheduleSelect(selectedDataRow, selectedOption.value, selectedOptionNumber, localStorage.getItem('director_id'));
-  };
+    const filteredData = data.filter(item => item.date === formattedDate);
+    console.log(filteredData);
+    setData(filteredData);
 
-  
+  };
 
   const swapSelected = (code) => {
-    setSelectedDataRow(data[code]);
-    // console.log(data[code])
-    setData(prevData =>
-      prevData.map((item, index) => {
+    setData(prevData => {
+      return prevData.map((item, index) => {
         if (index === code) {
-          if (!item.isSelected) {
-            let numbers = [];
-            for (let i = 0; i < parseInt(item.end_time) - parseInt(item.starting_time); i++) {
-              numbers.push(i + 1);
-            }
-            setSelectedOptionNumber(null);
-            setOptionsNumber(numbers);
-          }
-          
-          return { ...item, isSelected: !item.isSelected };
+          const isSelected = !item.isSelected;
+          setSelectedDataRow(isSelected ? data[code] : null);
+          return { ...item, isSelected };
         }
         return { ...item, isSelected: false };
-      })
-    );
+      });
+    });
   };
 
   return (
@@ -163,19 +112,26 @@ const Reservation = () => {
           <main className="main-block mt-10">
             <div className="login-box-table sm:w-[100%] px-[40px] py-[20px] sm:px-[0px]" >
               <div className='flex flex-row gap-10'>
-              <Select
-                id="dropdown"
-                options={options}
-                value={selectedOption}
-                onChange={handleChange}
-                className='w-[200px] mb-[20px] sm:ml-[20px]'
-              />
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DatePicker
+                  
+                  label="Выберите дату"
+                  localeText={"Привект"}
+                  value={selectedDate}
+                  onChange={(newValue) => {
+                    setSelectedDate(newValue);
+                    handleChange(newValue);
+                  }}
+                  
+                />
+              </LocalizationProvider>
               <Select
                 id="dropdown"
                 options={optionsBuilding}
                 value={selectedOptionBuilding}
                 onChange={handleChangeBuild}
-                className='w-[200px] mb-[20px] sm:ml-[20px]'
+                className='w-[259px] mb-[20px] sm:ml-[20px]'
+                styles={customStyles}
               />
               </div>
               <table className='table-res h-[422px] sm:max-w-[457px] md:mx-auto md:max-w-[571px]'>
@@ -183,6 +139,9 @@ const Reservation = () => {
                   <tr>
                       <th rowSpan={2} className='table-th-left px-[20px] md:px-[15px] sm:px-[10px]'>
                         №
+                      </th>
+                      <th rowSpan={2} className='border-t-0 md:px-[50px] sm:px-[30px]'>
+                        Дата
                       </th>
                       <th rowSpan={2} className='border-t-0 md:px-[50px] sm:px-[30px]'>
                         Расположение
@@ -198,6 +157,7 @@ const Reservation = () => {
                   { data.map((row, index) => (
                     <tr key={row.id} onClick={() => swapSelected(index)} className={row.isSelected ? "select-row" : ""}>
                       <td className={'border-l-0 '}>{index + 1}</td>
+                      <td className=''>{row.date}</td>
                       <td className=''>{row.location.name}</td>
                       <td className=''>{row.starting_time}:00</td>
                       <td className='border-r-0'>{row.end_time}:00</td>
@@ -206,26 +166,9 @@ const Reservation = () => {
                 </tbody>
               </table>
 
-              <div className='flex flex-row justify-between mt-[20px] items-end fotter-block'>
-                  <div className='sm:items-center sm:flex sm:flex-col '>
-                    <p className='text-xs text-zinc-400'>На сколько вы хотите забронировать?</p>
-                    <table className='max-w-max botoom-table mt-[10px]'>
-                      <tr>
-                      {optionsNumber.map((option, index, array) => (
-                        <ColorOption
-                          key={option}
-                          value={option}
-                          selected={option === selectedOptionNumber}
-                          onSelect={handleSelect}
-                          last = {index === array.length - 1}
-                        />
-                      ))}
-                      </tr>
-                    </table>
-
-
-                  </div>
-                  <Button onClick={handleSubmit} type="submit" className="cursor-pointer font-semibold leading-[normal] min-w-[200px] h-[60px] text-center text-l p-[0px]">
+              <div className='flex flex-row mt-[20px] justify-end fotter-block w-full'>
+                  
+                  <Button onClick={() => setModalActive(true)} type="submit" className="cursor-pointer font-semibold leading-[normal] min-w-[200px] h-[60px] text-center text-l p-[0px]">
                     Забронировать
                   </Button>
               </div>
@@ -233,6 +176,9 @@ const Reservation = () => {
             </div>
           </main>
         </div>
+        <Modal club_data = {selectedDataRow} active={modalActive} setActive={setModalActive}>
+          
+      </Modal>
     </div>
     </>);
   

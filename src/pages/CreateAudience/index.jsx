@@ -3,7 +3,6 @@ import { Header} from "components";
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import InputAdornment from '@mui/material/InputAdornment';
 import { Button, Text } from 'components';
 const CreateAudience = () => {
   const [name, setName] = useState('');
