@@ -2,37 +2,49 @@ import React from "react";
 import { Img, TextBlock, HighText, Header, Instruction, Text, Button, Building, ListBuilding} from "components";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowDown } from '@fortawesome/free-solid-svg-icons';
-
+import { LoadBuildingsData } from "repo/LoadBuildingsData";
+import { useState, useEffect } from "react";
 
 const Page = () => {
+  const [buildings, setBuildings] = useState([]);
 
-  const buildings = [
-    {
-      urlImg: "images/first.png",
-      build: "1-Й КОРПУС",
-      adres: "Малая Калужская улица, 1"
-    },
-    {
-      urlImg: "images/first.png",
-      build: "2-Й КОРПУС",
-      adres: "Малый Калужский переулок, 2с7"
-    },
-    {
-      urlImg: "images/first.png",
-      build: "3-Й КОРПУС",
-      adres: "Малый Калужский переулок, 2с6"
-    },
-    {
-      urlImg: "images/first.png",
-      build: "4-Й КОРПУС",
-      adres: "Малый Калужский переулок, 2с4"
-    },
-    {
-      urlImg: "images/first.png",
-      build: "6-Й КОРПУС",
-      adres: "Малый Калужский переулок, 2с5"
-    }
-  ]
+  useEffect(() => {
+    const fetchData = async () => {
+      // Получаем строения
+      const result = await LoadBuildingsData();
+      setBuildings(result);
+    };
+    fetchData();
+  }, []);
+
+
+  // const buildings = [
+  //   {
+  //     urlImg: "images/first.png",
+  //     build: "1-Й КОРПУС",
+  //     adres: "Малая Калужская улица, 1"
+  //   },
+  //   {
+  //     urlImg: "images/first.png",
+  //     build: "2-Й КОРПУС",
+  //     adres: "Малый Калужский переулок, 2с7"
+  //   },
+  //   {
+  //     urlImg: "images/first.png",
+  //     build: "3-Й КОРПУС",
+  //     adres: "Малый Калужский переулок, 2с6"
+  //   },
+  //   {
+  //     urlImg: "images/first.png",
+  //     build: "4-Й КОРПУС",
+  //     adres: "Малый Калужский переулок, 2с4"
+  //   },
+  //   {
+  //     urlImg: "images/first.png",
+  //     build: "6-Й КОРПУС",
+  //     adres: "Малый Калужский переулок, 2с5"
+  //   }
+  // ]
 
   return (
     <>

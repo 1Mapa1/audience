@@ -3,23 +3,19 @@ import TextField from '@mui/material/TextField';
 import { Button } from 'components';
 // import { isUserConfirm } from 'repo/IsUserConfirm';
 // import useAuth from 'hooks/useAuth';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useUser } from 'hooks/UserContext';
+import { isUserConfirm } from 'repo/IsUserConfirm';
 
 
 
 
 const LoginForm = () => {
-  // const { setAuth } = useAuth()
-  const navigate = useNavigate()
-  const location = useLocation()
-  const from = location.state?.from?.pathname || '/login-table'
+  const { setUser } = useUser();
   const [login, setLogin] = useState('');
   const [password, setPassword] = useState('');
 
-  function saveCredentials(login, password, director_id) {
-    localStorage.setItem('login', login);
-    localStorage.setItem('password', password);
-    localStorage.setItem('director_id', director_id);
+  function saveCredentials(userData) {
+    localStorage.setItem('user', JSON.stringify(userData));
   }
 
   const handleLoginChange = (e) => {
@@ -32,16 +28,14 @@ const LoginForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // const isConfirmed = await isUserConfirm(login, password);
-    // if (isConfirmed) {
-    //   console.log(isConfirmed);
-    //   saveCredentials(login, password, isConfirmed);
-    //   // setAuth(true);
-    //   navigate(from, { replace: true });
-    //   console.log('Успешный вход');
-    // } else {
-    //   console.log('Неправильное имя пользователя или пароль');
-    // }
+    const userData = await isUserConfirm(login, password);
+    if (userData) {
+      saveCredentials(userData);
+      setUser(userData)
+      console.log('Успешный вход');
+    } else {
+      console.log('Неправильное имя пользователя или пароль');
+    }
   }
 
   return (

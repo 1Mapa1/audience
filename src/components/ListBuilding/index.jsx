@@ -5,13 +5,18 @@ const ListBuilding = ({items}) => {
     const getIterationsCount = (itemsCount) => {
         return Math.ceil(itemsCount / 3);
     };
-    
+      // Пример входных данных
+      // data = [{
+      //   address: "Малая Калужская улица, 1",
+      //   icon_link: "https://bwdepnzjuqvzreolimzt.supabase.co/storage/v1/object/sign/spacesharing/buildings_icons/1_building.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJzcGFjZXNoYXJpbmcvYnVpbGRpbmdzX2ljb25zLzFfYnVpbGRpbmcucG5nIiwiaWF0IjoxNzAyNTg0MDAxLCJleHAiOjE3MzQxMjAwMDF9.xw61GCKGHibHgDqAiuRuaQUA9ESgXmeW671WbUQCqpY&t=2023-12-14T20%3A00%3A00.887Z",
+      //   id: 1,
+      //   name: "1-й корпус"}]
       // Функция для рендера элементов
       const renderItems = (iteration) => {
         const startIndex = iteration * 3;
         const endIndex = startIndex + 3;
         return items.slice(startIndex, endIndex).map((item, index) => (
-          <Building key={startIndex + index} urlImg={item.urlImg} build={item.build} adres={item.adres}></Building>
+          <Building key={startIndex + index} urlImg={item.icon_link} build={item.name} address={item.address}></Building>
         ));
       };
     

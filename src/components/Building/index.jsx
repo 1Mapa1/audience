@@ -1,7 +1,7 @@
 import React from "react";
 import { Text, Img } from "components";
 
-const Building = ({urlImg, build, adres}) => {
+const Building = ({urlImg, build, address}) => {
     return (
         <div className="flex flex-col items-center">
             <Img
@@ -13,7 +13,7 @@ const Building = ({urlImg, build, adres}) => {
                 {build}
             </Text>
             <Text className="text-sm">
-                {adres}
+                {address}
             </Text>
         </div>
     )
