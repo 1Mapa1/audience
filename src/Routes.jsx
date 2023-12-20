@@ -23,6 +23,7 @@ const Login = React.lazy(() => import("pages/Login"));
 const Reservation = React.lazy(() => import("pages/Reservation"));
 const MyReservation = React.lazy(() => import("pages/MyReservation"));
 const CreateAudience = React.lazy(() => import("pages/CreateAudience"));
+const EditReservation = React.lazy(() => import("pages/EditReservation"));
 const ProjectRoutes = () => {
   const { user } = useUser();
   
@@ -41,6 +42,7 @@ const ProjectRoutes = () => {
             <Route path="/MyReservation" element={<MyReservation />} />
           </Route>
           
+          <Route path="/EditReservation" element={<EditReservation />} />
           <Route path="/CreateAudience" element={<CreateAudience />} />
           <Route path="*" element={<NotFound />} />
           <Route path="/dhiwise-dashboard" element={<Home />} />

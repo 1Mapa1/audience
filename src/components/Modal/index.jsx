@@ -27,23 +27,11 @@ const customStyles = {
 
 
 const Modal = ({club_data, active, setActive}) => {
-  const [selectedOption, setSelectedOption] = useState(options[0]);
   if (!club_data) {
     // Обработка случая, когда данных нет
     return null; // Или отображение сообщения о том, что данные не выбраны
   }
-
-  const handleChange = (selected) => {
-    setSelectedOption(selected);
-    console.log(selected.value);
-    if (selected.value === 1) {
-      document.getElementById("full_name").style.display = "none";
-    }
-    else {
-      document.getElementById("full_name").style.display = "block";
-    }
-  }
-
+  
   return (
     <div className={active ? "modal active" : "modal"} onClick={() => setActive(false)}>
       <div className={"bg-white-A700 flex flex-col font-sourcesanspro items-center justify-start max-w-[1221px] mx-auto p-[17px] md:px-5 rounded-[50px] sm:rounded-[0px] w-full" + (active ? " modal__content active" : " modal__content")} onClick={(e) => e.stopPropagation()}>
@@ -103,29 +91,6 @@ const Modal = ({club_data, active, setActive}) => {
                 <FormHelperText>Введите максимальное количество человек на мероприятиии</FormHelperText>
               </div>
               <div>
-                <Typography variant="h6">Вы ответственный за мероприятие или кто-то другой?</Typography>
-                <Grid container spacing={2} >
-                        <Grid item xs={2.5}>
-                        <Select
-                          id="dropdown"
-                          options={options}
-                          value={selectedOption}
-                          onChange={handleChange}
-                          styles={customStyles}
-                          className='w-[200px] mt-[16px] mb-[8px] sm:ml-[20px]'
-                        />
-                        </Grid>
-                        <Grid item xs={9.5} id='full_name'>
-                          <TextField
-                            margin="normal"
-                            fullWidth
-                            placeholder="Введите ФИО ответсвенного"
-                          />
-                        </Grid>
-                      </Grid>
-                <FormHelperText>Если выбранно “Да”, то в качестве ответственного в служебной записке будет указано ваше ФИО, если выбранно “Нет” то ФИО из поля ввода</FormHelperText>
-              </div>
-              <div>
                 <Typography variant="h6">Описание</Typography>
                 <TextareaAutosize
                   placeholder="Введите текст"
@@ -153,4 +118,111 @@ const Modal = ({club_data, active, setActive}) => {
     
   );
 };
-export { Modal };
+
+
+
+const ModalReservation = ({club_data, active, setActive}) => {
+  const [selectedOption, setSelectedOption] = useState(options[0]);
+
+  const handleChange = (selected) => {
+    setSelectedOption(selected);
+    console.log(selected.value);
+    if (selected.value === 1) {
+      document.getElementById("full_name").style.display = "none";
+    }
+    else {
+      document.getElementById("full_name").style.display = "block";
+    }
+  }
+  return (
+    <div className={active ? "modal active" : "modal"} onClick={() => setActive(false)}>
+      <div className={"bg-white-A700 flex flex-col font-sourcesanspro items-center justify-start max-w-[1221px] mx-auto p-[17px] md:px-5 rounded-[50px] sm:rounded-[0px] w-full" + (active ? " modal__content active" : " modal__content")} onClick={(e) => e.stopPropagation()}>
+          <div className="items-center justify-center px-[100px] py-[50px] w-full flex flex-col">
+            <div className="flex md:flex-col flex-row md:gap-5 items-end justify-between w-full md:w-full">
+              <div className='w-[60px]'></div>
+              <div className="flex flex-col gap-6 items-start justify-start md:mt-0 mt-[15px]">
+                
+                <div className='close-text'>
+                  <Text
+                    className="md:text-3xl sm:text-[28px] text-3xl font-semibold text-sky-700"
+                    size="txtSourceSansProSemiBold32"
+                  >
+                    Добавление доступного времени аудитории
+                  </Text>
+                  <div className="hidden md:flex items-center cursor-pointer justify-start ml-5 md:ml-[0] md:mt-0 mt-[13px] w-6 md:w-[10px]" onClick={() => setActive(false)}>
+                    <Img
+                      className="h-[25px] w-6 cursor-pointer"
+                      src="images/img_close.svg"
+                      alt="close"
+                    />
+                  </div>
+                </div>
+              </div>
+              
+              <div className="flex flex-col items-center justify-start ml-5 md:hidden md:ml-[0] cursor-pointer md:mt-0 mt-[13px] w-10" onClick={() => setActive(false)}>
+                <Img
+                  className="h-[25px] w-6"
+                  src="images/img_close.svg"
+                  alt="close"
+                />
+              </div>
+            </div>
+            <div className='flex flex-row mt-[18px] gap-5'>
+               <Select
+                          id="dropdown"
+                          options={options}
+                          value={selectedOption}
+                          onChange={handleChange}
+                          styles={customStyles}
+                          className='w-[200px] mt-[16px] mb-[8px] sm:ml-[20px]'
+                        />
+                         <Select
+                          id="dropdown"
+                          options={options}
+                          value={selectedOption}
+                          onChange={handleChange}
+                          styles={customStyles}
+                          className='w-[200px] mt-[16px] mb-[8px] sm:ml-[20px]'
+                        />
+                         <Select
+                          id="dropdown"
+                          options={options}
+                          value={selectedOption}
+                          onChange={handleChange}
+                          styles={customStyles}
+                          className='w-[200px] mt-[16px] mb-[8px] sm:ml-[20px]'
+                        />
+                         <Select
+                          id="dropdown"
+                          options={options}
+                          value={selectedOption}
+                          onChange={handleChange}
+                          styles={customStyles}
+                          className='w-[200px] mt-[16px] mb-[8px] sm:ml-[20px]'
+                        />
+                        
+            </div>
+              
+            <div className="flex flex-row font-inter gap-10 items-center md:ml-[0] mt-[18px] ">
+              
+              <Button onClick={
+                function handleClick() {
+                }} 
+                className="cursor-pointer font-semibold leading-[normal] mb-1 min-w-[244px] text-center text-xl">
+                Вступить
+              </Button>
+              <Button onClick={
+                function handleClick() {
+                }} 
+                className="cursor-pointer font-semibold leading-[normal] mb-1 min-w-[244px] text-center text-xl">
+                Вступить
+              </Button>
+            </div>
+          </div>
+        </div>
+    </div>
+
+  )
+}
+
+export { Modal, ModalReservation };

@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import Select from 'react-select';
-import { Button, Header, Modal} from "components";
+import { Button, Header, ModalReservation} from "components";
 // import { loadFreeTime } from 'repo/loadFreeTime';
 // import { uploadScheduleSelect } from 'repo/uploadScheduleSelect';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -9,7 +9,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
 
 const optionsBuilding = [
-  { value: 1, label: '1-й корпус' },
+  { value: 1, label: 'пример' },
   { value: 2, label: '2-й корпус' },
   { value: 3, label: '3-й корпус' },
   { value: 4, label: '4-й корпус' },
@@ -35,14 +35,15 @@ const customStyles = {
 
 
 
-const Reservation = () => {
+const EditReservation = () => {
 
   const [selectedDate, setSelectedDate] = useState(dayjs());
   const [modalActive, setModalActive] = useState(false);
 
-  const [selectedOptionBuilding, setSelectedOptionBuilding] = useState(optionsBuilding[0]);
+  const [selectedOptionBuilding, setSelectedOptionBuilding] = useState(null);
   const [selectedDataRow, setSelectedDataRow] = useState(null);
   const [data, setData] = useState([ {
+    id: 1,
     location: {
       name: "пример"
     },
@@ -50,8 +51,19 @@ const Reservation = () => {
     starting_time: "12",
     end_time: "18",
     isSelected: false
-  }, 
+  },
   {
+    id: 2,
+    location: {
+      name: "пример"
+    },
+    date: "17.12.23",
+    starting_time: "12",
+    end_time: "18",
+    isSelected: false
+  },  
+  {
+    id: 3,
     location: {
       name: "пример 2"
     },
@@ -75,6 +87,10 @@ const Reservation = () => {
 
   const handleChangeBuild = (selected) => {
     setSelectedOptionBuilding(selected);
+    const audience = selected.label;
+    console.log(audience);
+    const filteredData = data.filter(item => item.location.name === audience);
+    setData(filteredData);
   }
 
   const handleChange = (selected) => {
@@ -83,8 +99,20 @@ const Reservation = () => {
     console.log(formattedDate);
 
     const filteredData = data.filter(item => item.date === formattedDate);
-    console.log(filteredData);
+
     setData(filteredData);
+
+  };
+
+  const deleteReservation = () => {
+
+    if (selectedDataRow)
+    {
+    const filteredData = data.filter(item => item.id !== selectedDataRow.id);
+    setSelectedDataRow(null);
+
+    setData(filteredData);
+    }
 
   };
 
@@ -127,11 +155,13 @@ const Reservation = () => {
               </LocalizationProvider>
               <Select
                 id="dropdown"
+                
                 options={optionsBuilding}
                 value={selectedOptionBuilding}
                 onChange={handleChangeBuild}
                 className='w-[259px] mb-[20px] sm:ml-[20px]'
                 styles={customStyles}
+                placeholder="Аудитории"
               />
               </div>
               <table className='table-res h-[422px] sm:max-w-[457px] md:mx-auto md:max-w-[571px]'>
@@ -144,7 +174,7 @@ const Reservation = () => {
                         Дата
                       </th>
                       <th rowSpan={2} className='border-t-0 md:px-[50px] sm:px-[30px]'>
-                      Аудитория
+                        Аудитория
                       </th>
                       <th colSpan="2" className='table-th-right'>Доступное время</th>
                   </tr>
@@ -175,22 +205,28 @@ const Reservation = () => {
 
               </table>
 
-              <div className='flex flex-row mt-[20px] justify-end fotter-block w-full'>
+              <div className='flex flex-row mt-[20px] gap-5 justify-end fotter-block w-full'>
                   
+                  <Button onClick={deleteReservation} type="submit" className="cursor-pointer font-semibold leading-[normal] min-w-[200px] h-[60px] text-center text-l p-[0px]">
+                    Удалить
+                  </Button>
                   <Button onClick={() => setModalActive(true)} type="submit" className="cursor-pointer font-semibold leading-[normal] min-w-[200px] h-[60px] text-center text-l p-[0px]">
-                    Забронировать
+                    Редактировать
+                  </Button>
+                  <Button onClick={() => setModalActive(true)} type="submit" className="cursor-pointer font-semibold leading-[normal] min-w-[200px] h-[60px] text-center text-l p-[0px]">
+                    Добавить
                   </Button>
               </div>
 
             </div>
           </main>
         </div>
-        <Modal club_data = {selectedDataRow} active={modalActive} setActive={setModalActive}>
+        <ModalReservation club_data = {selectedDataRow} active={modalActive} setActive={setModalActive}>
           
-      </Modal>
+      </ModalReservation>
     </div>
     </>);
   
 }
 
-export default Reservation;
+export default EditReservation;
