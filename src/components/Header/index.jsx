@@ -1,8 +1,14 @@
 import React from "react";
 import { Link } from "react-router-dom"; 
 import { Img, Text} from "components";
+import { useUser } from "hooks/UserContext";
 
 const Header = (shadow) => {
+    const {user, setUser } = useUser();
+    function handleLogout() {
+        setUser(null)
+        localStorage.clear()
+    }
     return (
         <>
             <header className={"absolute flex inset-x-[0] items-center justify-center mx-auto top-[0]"}>
@@ -21,14 +27,25 @@ const Header = (shadow) => {
                                 Бронирование
                             </Text>
                         </Link>
-                        <Link to="/login">
-                            <Text
-                                className="text-light_blue-800 text-logo"
-                                size="txtInterSemiBold20"
-                            >
-                                Войти
-                            </Text>
-                        </Link>
+                        { user ? (<Link to="" onClick={handleLogout}>
+                                <Text
+                                    className="text-light_blue-800 text-logo"
+                                    size="txtInterSemiBold20"
+                                >
+                                    Выйти
+                                </Text>
+                            </Link>): (
+                            <Link to="/login" >
+                                <Text
+                                    className="text-light_blue-800 text-logo"
+                                    size="txtInterSemiBold20"
+                                >
+                                    Войти
+                                </Text>
+                            </Link>
+                        )
+                        }
+                       
                     </div>
                 </div>
           </header>
