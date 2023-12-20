@@ -25,12 +25,12 @@ const MyReservation = React.lazy(() => import("pages/MyReservation"));
 const CreateAudience = React.lazy(() => import("pages/CreateAudience"));
 const EditReservation = React.lazy(() => import("pages/EditReservation"));
 const ProjectRoutes = () => {
-  const { user } = useUser();
-  
-  if (user === null) {
-    return <div>Loading...</div>;
+  const { user, isLoading } = useUser();
+  console.log(user, isLoading)
+  if (isLoading) {
+    return <div>Loading...</div>
   }
-  return (
+  else return (
     <React.Suspense fallback={<>Loading...</>}>
       <Router>
         <Routes>
