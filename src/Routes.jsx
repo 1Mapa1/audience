@@ -4,9 +4,6 @@ import Home from "pages/Home";
 import NotFound from "pages/NotFound";
 import { ProtectedRoute } from "components";
 
-
-
-
 const Page = React.lazy(() => import("pages/Page"));
 const Audience = React.lazy(() => import("pages/Audience"));
 const Login = React.lazy(() => import("pages/Login"));
@@ -22,7 +19,7 @@ const ProjectRoutes = () => {
           <Route path="/" element={<Page />} />
           <Route path="/Audience" element={<Audience />} />
           <Route path="/Login" element={<Login />} />
-          <Route element={<ProtectedRoute />}>
+          <Route element={<ProtectedRoute/>}>
             <Route path="/Reservation" element={<Reservation />} />
             <Route path="/MyReservation" element={<MyReservation />} />
           </Route>

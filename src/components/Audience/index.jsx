@@ -26,7 +26,7 @@ const Audience = ({audience}) => {
                         Тип помещения
                     </Text>
                     <Text className="font-bold text-sm">
-                        {audience.type}
+                        {audience.audience_type.type_audiences}
                     </Text>
                 </div>
                 <div className="flex flex-col items-center gap-1">
@@ -57,6 +57,22 @@ const Audience = ({audience}) => {
                     {audience.capacity} места
                 </Text>
                 </div>
+                {audience.equipment_list ?
+                (audience.equipment_list.map((equipment) =>{
+                        return (
+                            <div className="flex flex-col items-center gap-2">
+                                <Img
+                                    className=" object-cover h-[120px]"
+                                    src={equipment.logo_link}
+                                    alt="imageOne"
+                                />
+                                <Text className="font-bold text-xl">
+                                {equipment.quantity} {equipment.equipment} 
+                                </Text>
+                                </div>
+                        )
+                    })) : <></>
+                }
                 {/* <div className="flex flex-col items-center gap-2">
                 <Img
                     className=" object-cover h-[120px]"
@@ -78,7 +94,8 @@ const Audience = ({audience}) => {
                 </Text>
                 </div> */}
             </div>
-            <Carousel swipeable={true}
+            { audience.images_links ?
+            (<Carousel swipeable={true}
             draggable={true}
             showDots={true}
             responsive={responsive}
@@ -91,17 +108,15 @@ const Audience = ({audience}) => {
             itemClass="rounded-[20px]" 
             className="w-full items-start" >
             {
-                audience.image_links ? audience.image_links.map((img) => {
+                 audience.images_links.map((img) => {
                     return(<Img
                         src={img} 
                         className="h-[400px] rounded-[20px] mx-auto">
                     </Img>)
-                }) : <Img
-                        src={"images/img_121.png"} 
-                        className="h-[400px] rounded-[20px] mx-auto">
-                    </Img>
+                }) 
             }
-            </Carousel>
+            </Carousel>) : <></>
+            }
         </div>
     )
 }

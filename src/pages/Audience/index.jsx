@@ -69,7 +69,7 @@ const Audience = () => {
     
             <div className="max-w-[1360px] mt-auto mx-auto md:px-5 w-full">
               <HighText spacing="tracking-[50px] md:tracking-[20px] sm:tracking-[10px]">
-                Аудитория
+                Аудитории
               </HighText>
     
                 {loading ? (<div>Ждемс</div>) : (<ListAudience audiences={audiences}></ListAudience>)}
