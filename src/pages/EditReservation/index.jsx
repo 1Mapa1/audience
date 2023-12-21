@@ -142,9 +142,7 @@ const EditReservation = () => {
               <div className='flex flex-row gap-10'>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker
-                  
                   label="Выберите дату"
-                  localeText={"Привект"}
                   value={selectedDate}
                   onChange={(newValue) => {
                     setSelectedDate(newValue);
@@ -221,7 +219,7 @@ const EditReservation = () => {
             </div>
           </main>
         </div>
-        <ModalReservation club_data = {selectedDataRow} active={modalActive} setActive={setModalActive}>
+        <ModalReservation audiences={["1225", "355", "444"]}  active={modalActive} setActive={setModalActive}>
           
       </ModalReservation>
     </div>
