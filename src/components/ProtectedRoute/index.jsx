@@ -1,14 +1,22 @@
 import React from "react";
 import { Navigate, Outlet } from "react-router-dom";
+import { useUser } from "hooks/UserContext";
 
 const ProtectedRoute = ({
-  isAllowed,
+  allowedRoles,
   redirectPath = '/login',
   children
 }) => {
-  if (!isAllowed) {
-    return <Navigate to={redirectPath} replace />
+  const { user } = useUser();
+  const { loading } = user;
+
+  if (loading) {
+    return <div>Loading...</div>
   }
-  return children ? children : <Outlet/>
+  if (user.data) {
+    return children ? children : <Outlet/>
+    
+  }
+    return <Navigate to={redirectPath} replace />
 }
 export {ProtectedRoute}

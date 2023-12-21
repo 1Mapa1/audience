@@ -1,39 +1,58 @@
 import React from "react";
+import { useState, useEffect } from "react";
+import { LoadAudienceByBuilding } from "repo/loadAudienceByBulding";
 import { HighText, Header, Building, ListAudience} from "components";
 
 const Audience = () => { 
-    
+  const [audiences, setAudiences] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-    const audiences = [
-        {
-            title: "Аудитория 1025",
-            type: "Аудитория", 
-            place: "1 этаж, ауд. 1025",
-            square: 40,
-            desk: 32,
-            computer: 1,
-            projector: 1,
-            imgs: [
-                "images/img_121.png",
-                "images/img_121.png",
-                "images/img_121.png",
-            ]
-        },
-        {
-            title: "Аудитория 1030",
-            type: "Аудитория", 
-            place: "1 этаж, ауд. 1025",
-            square: 40,
-            desk: 32,
-            computer: 1,
-            projector: 1,
-            imgs: [
-                "images/img_121.png",
-                "images/img_121.png",
-                "images/img_121.png",
-            ]
-        },
-    ]
+  const fetchData = async () => {
+    // Получаем строения
+    try {
+      // using await to make async code look sync and shorten 
+      const res = await LoadAudienceByBuilding(1);
+      setAudiences(res);
+    } catch (err) {
+      console.error(`Error: ${err}`);
+      // setting the error state
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+    // const audiences = [
+    //     {
+    //         audience_name: "Аудитория 1025",
+    //         type: "Аудитория", 
+    //         address: "1 этаж, ауд. 1025",
+    //         square: 40,
+    //         capacity: 32,
+    //         image_links: [
+    //             "images/img_121.png",
+    //             "images/img_121.png",
+    //             "images/img_121.png",
+    //         ]
+    //     },
+    //     {
+    //         title: "Аудитория 1030",
+    //         type: "Аудитория", 
+    //         place: "1 этаж, ауд. 1025",
+    //         square: 40,
+    //         desk: 32,
+    //         computer: 1,
+    //         projector: 1,
+    //         imgs: [
+    //             "images/img_121.png",
+    //             "images/img_121.png",
+    //             "images/img_121.png",
+    //         ]
+    //     },
+    // ]
     
     return (
         <>
@@ -53,7 +72,7 @@ const Audience = () => {
                 Аудитория
               </HighText>
     
-                <ListAudience audiences={audiences}></ListAudience>
+                {loading ? (<div>Ждемс</div>) : (<ListAudience audiences={audiences}></ListAudience>)}
             </div>
             
             

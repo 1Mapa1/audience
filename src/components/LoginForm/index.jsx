@@ -5,18 +5,15 @@ import { Button } from 'components';
 // import useAuth from 'hooks/useAuth';
 import { useUser } from 'hooks/UserContext';
 import { isUserConfirm } from 'repo/IsUserConfirm';
+import { Navigate } from 'react-router-dom';
 
 
 
 
 const LoginForm = () => {
-  const { setUser } = useUser();
+  const { setUserData } = useUser();
   const [login, setLogin] = useState('');
   const [password, setPassword] = useState('');
-
-  function saveCredentials(userData) {
-    localStorage.setItem('user', JSON.stringify(userData));
-  }
 
   const handleLoginChange = (e) => {
     setLogin(e.target.value);
@@ -30,9 +27,9 @@ const LoginForm = () => {
     e.preventDefault();
     const userData = await isUserConfirm(login, password);
     if (userData) {
-      saveCredentials(userData);
-      setUser(userData)
+      setUserData(userData)
       console.log('Успешный вход');
+      <Navigate to='/' replace />
     } else {
       console.log('Неправильное имя пользователя или пароль');
     }

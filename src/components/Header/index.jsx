@@ -4,9 +4,9 @@ import { Img, Text} from "components";
 import { useUser } from "hooks/UserContext";
 
 const Header = (shadow) => {
-    const {user, setUser } = useUser();
+    const {user, setUserData } = useUser();
     function handleLogout() {
-        setUser(null)
+        setUserData(null)
         localStorage.clear()
     }
     return (
@@ -27,7 +27,7 @@ const Header = (shadow) => {
                                 Бронирование
                             </Text>
                         </Link>
-                        { user ? (<Link to="" onClick={handleLogout}>
+                        { user.data ? (<Link to="" onClick={handleLogout}>
                                 <Text
                                     className="text-light_blue-800 text-logo"
                                     size="txtInterSemiBold20"

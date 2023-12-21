@@ -5,7 +5,7 @@ import { Text, Img } from "components";
 
 
 const Audience = ({audience}) => {
-    console.log(audience);
+    
 
     const responsive = {
         desktop: {
@@ -17,7 +17,7 @@ const Audience = ({audience}) => {
     return (
         <div className="flex flex-col rounded-[20px] h-max items-center px-[20px] py-[40px] mb-[40px]" style={{backgroundColor: "white"}}>
             <Text className="text-[35px] font-bold text-sky-700">
-                {audience.title}
+                {audience.audience_name}
             </Text>
             <hr style={{ border: '1px solid black', width: '100%' }}  className="my-7"></hr>
             <div className="flex flex-row h-max items-center gap-20">
@@ -34,7 +34,7 @@ const Audience = ({audience}) => {
                         Местоположение
                     </Text>
                     <Text className="font-bold text-sm">
-                        {audience.place}
+                        {audience.address}
                     </Text>
                 </div>
                 <div className="flex flex-col items-center gap-1">
@@ -54,10 +54,10 @@ const Audience = ({audience}) => {
                     alt="imageOne"
                 />
                 <Text className="font-bold text-xl">
-                    {audience.desk} места
+                    {audience.capacity} места
                 </Text>
                 </div>
-                <div className="flex flex-col items-center gap-2">
+                {/* <div className="flex flex-col items-center gap-2">
                 <Img
                     className=" object-cover h-[120px]"
                     src="images/computer.svg"
@@ -76,7 +76,7 @@ const Audience = ({audience}) => {
                 <Text className="font-bold text-xl">
                     {audience.projector} проектор
                 </Text>
-                </div>
+                </div> */}
             </div>
             <Carousel swipeable={true}
             draggable={true}
@@ -91,12 +91,15 @@ const Audience = ({audience}) => {
             itemClass="rounded-[20px]" 
             className="w-full items-start" >
             {
-                audience.imgs.map((img) => {
+                audience.image_links ? audience.image_links.map((img) => {
                     return(<Img
                         src={img} 
                         className="h-[400px] rounded-[20px] mx-auto">
                     </Img>)
-                })
+                }) : <Img
+                        src={"images/img_121.png"} 
+                        className="h-[400px] rounded-[20px] mx-auto">
+                    </Img>
             }
             </Carousel>
         </div>

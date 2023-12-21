@@ -2,19 +2,9 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route,  Navigate, Outlet } from "react-router-dom";
 import Home from "pages/Home";
 import NotFound from "pages/NotFound";
-import { useUser } from "hooks/UserContext";
+import { ProtectedRoute } from "components";
 
-const ProtectedRoute = ({
-  isAllowed,
-  redirectPath = '/Login',
-  children
-}) => {
-  console.log(isAllowed)
-  if (!isAllowed) {
-    return <Navigate to={redirectPath} replace />
-  }
-  return children ? children : <Outlet/>
-}
+
 
 
 const Page = React.lazy(() => import("pages/Page"));
@@ -25,19 +15,14 @@ const MyReservation = React.lazy(() => import("pages/MyReservation"));
 const CreateAudience = React.lazy(() => import("pages/CreateAudience"));
 const EditReservation = React.lazy(() => import("pages/EditReservation"));
 const ProjectRoutes = () => {
-  const { user, isLoading } = useUser();
-  console.log(user, isLoading)
-  if (isLoading) {
-    return <div>Loading...</div>
-  }
-  else return (
+  return (
     <React.Suspense fallback={<>Loading...</>}>
       <Router>
         <Routes>
           <Route path="/" element={<Page />} />
           <Route path="/Audience" element={<Audience />} />
           <Route path="/Login" element={<Login />} />
-          <Route element={<ProtectedRoute isAllowed={user}/>}>
+          <Route element={<ProtectedRoute />}>
             <Route path="/Reservation" element={<Reservation />} />
             <Route path="/MyReservation" element={<MyReservation />} />
           </Route>
