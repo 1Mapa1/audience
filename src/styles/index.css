@@ -2,6 +2,62 @@ body {
   background-color: #E5E5E5;
 }
 
+.green-button {
+  background-color: #DCFFD0;
+  padding: 10px;
+  border-radius: 3px;
+  color: #386F25;
+  font-weight: 600;
+  border: 1px solid white;
+  transition: border 0.3s;
+}
+
+.green-button:hover {
+  border: 1px solid #386F25;
+}
+
+.green-button.select{
+  background-color: rgba(220, 255, 208, 0.25);
+  padding: 10px;
+  border-radius: 3px;
+  color: #386F25;
+  font-weight: 600;
+  border: 1px solid #386F25;
+  transition: background-color 0.3s;
+}
+
+.green-button.select:hover{
+  background-color: #DCFFD0;
+}
+
+.red-button {
+  background-color: #FBCACA;
+  padding: 10px;
+  border-radius: 3px;
+  color: #C74545;
+  font-weight: 600;
+  border: 1px solid white;
+  transition: border 0.3s;
+}
+
+.red-button:hover {
+  border: 1px solid #C74545;
+}
+
+.red-button.select {
+  background-color: rgba(251, 202, 202, 0.25);
+  padding: 10px;
+  border-radius: 3px;
+  color: #C74545;
+  font-weight: 600;
+  border: 1px solid #C74545;
+  transition: background-color 0.3s;
+}
+
+.red-button.select:hover {
+  background-color: #FBCACA;
+}
+
 .modal {
   width: 100vw;
   height: 100vh;

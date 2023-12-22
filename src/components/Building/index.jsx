@@ -12,7 +12,7 @@ const Building = ({urlImg, build, address}) => {
             <Text className="font-semibold">
                 {build}
             </Text>
-            <Text className="text-sm">
+            <Text className="text-sm text-center">
                 {address}
             </Text>
         </div>

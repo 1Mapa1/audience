@@ -2,8 +2,12 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { LoadAudienceByBuilding } from "repo/loadAudienceByBulding";
 import { HighText, Header, Building, ListAudience} from "components";
+import { useSelector } from 'react-redux';
 
 const Audience = () => { 
+
+  const pageAudienceData = useSelector(state => state.page.pageAudienceData);
+  console.log(pageAudienceData);
   const [audiences, setAudiences] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -53,8 +57,8 @@ const Audience = () => {
     //         ]
     //     },
     // ]
-    
     return (
+      
         <>
           <div className="bg-white-A700 font-sourcesanspromx-auto pb-[27px] px-[27px] md:px-[0px] relative w-full">
             <div className="font-inter h-[200px] max-w-[1360px] mx-auto w-full z-[1]">
@@ -64,7 +68,7 @@ const Audience = () => {
             
             
             <div className="max-w-[1360px] mt-auto mx-auto md:px-5 w-full flex justify-center">
-                <Building urlImg={"images/first.png"} build={"1-Й КОРПУС"} adres={"Какой-то адрес"}></Building>
+                <Building urlImg={pageAudienceData.icon_link} build={pageAudienceData.name} address={pageAudienceData.address}></Building>
             </div>
     
             <div className="max-w-[1360px] mt-auto mx-auto md:px-5 w-full">
