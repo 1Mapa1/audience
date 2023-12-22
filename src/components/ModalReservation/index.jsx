@@ -45,7 +45,7 @@ const ModalReservation = ({audiences, active, setActive}) => {
     const [selectedOptionEnd, setSelectedOptionEnd] = useState(optionsTime.at(-1));
     const [selectedOptionAudience, setSelectedOptionAudience] = useState(null);
     let audiencesData = [];
-    console.log(audiences);
+    
     for (var i = 0; i < audiences.length; i++ ) {
         audiencesData.push({value: i + 1, label: audiences[i]});
     }

@@ -19,13 +19,15 @@ const ProjectRoutes = () => {
           <Route path="/" element={<Page />} />
           <Route path="/Audience" element={<Audience />} />
           <Route path="/Login" element={<Login />} />
-          <Route element={<ProtectedRoute/>}>
+          <Route element={<ProtectedRoute allowedRoles={[1,2]}/>}>
             <Route path="/Reservation" element={<Reservation />} />
             <Route path="/MyReservation" element={<MyReservation />} />
           </Route>
+          <Route element={<ProtectedRoute allowedRoles={[1]}/>}>
+            <Route path="/EditReservation" element={<EditReservation />} />
+            <Route path="/CreateAudience" element={<CreateAudience />} />
+          </Route>
           
-          <Route path="/EditReservation" element={<EditReservation />} />
-          <Route path="/CreateAudience" element={<CreateAudience />} />
           <Route path="*" element={<NotFound />} />
           <Route path="/dhiwise-dashboard" element={<Home />} />
         </Routes>

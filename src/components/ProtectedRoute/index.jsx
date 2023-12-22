@@ -13,7 +13,7 @@ const ProtectedRoute = ({
   if (loading) {
     return <div>Loading...</div>
   }
-  if (user.data) {
+  if (user.data && allowedRoles.includes(user.data.role)) {
     return children ? children : <Outlet/>
     
   }

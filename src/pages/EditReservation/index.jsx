@@ -7,15 +7,19 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
+import { ruRU } from '@mui/x-date-pickers';
+import 'dayjs/locale/ru';
+import { loadFreeTime } from 'repo/loadFreetime';
+import { LoadBuildingsData } from 'repo/LoadBuildingsData';
 
-const optionsBuilding = [
-  { value: 1, label: 'пример' },
-  { value: 2, label: '2-й корпус' },
-  { value: 3, label: '3-й корпус' },
-  { value: 4, label: '4-й корпус' },
-  { value: 5, label: '5-й корпус' },
-  { value: 6, label: '6-й корпус' },
-];
+// const optionsBuilding = [
+//   { value: 1, label: 'пример' },
+//   { value: 2, label: '2-й корпус' },
+//   { value: 3, label: '3-й корпус' },
+//   { value: 4, label: '4-й корпус' },
+//   { value: 5, label: '5-й корпус' },
+//   { value: 6, label: '6-й корпус' },
+// ];
 
 const customStyles = {
   control: (provided) => ({
@@ -42,79 +46,79 @@ const EditReservation = () => {
 
   const [selectedOptionBuilding, setSelectedOptionBuilding] = useState(null);
   const [selectedDataRow, setSelectedDataRow] = useState(null);
-  const [data, setData] = useState([ {
-    id: 1,
-    location: {
-      name: "пример"
-    },
-    date: "14.12.23",
-    starting_time: "12",
-    end_time: "18",
-    isSelected: false
-  },
-  {
-    id: 2,
-    location: {
-      name: "пример"
-    },
-    date: "17.12.23",
-    starting_time: "12",
-    end_time: "18",
-    isSelected: false
-  },  
-  {
-    id: 3,
-    location: {
-      name: "пример 2"
-    },
-    date: "15.12.23",
-    starting_time: "17",
-    end_time: "18",
-    isSelected: false
-  }]);
+  const [data, setData] = useState([]);
+  const [optionsBuilding, setBuildings] = useState(null);
+  const [loadingData, setLoadingData] = useState(true);
+  const [loadingBuildings, setLoadingBuildings] = useState(true);
 
-  const loadBigdata = async () => {
-    // Тут вызывается ваша функция для получения данных
-    // const result = await loadFreeTime();
-    // setBigData(result);
-    // setData(result[0].schedule_entries)
+
+  const fetchBuildings = async () => {
+    // Получаем строения
+    try {
+      // using await to make async code look sync and shorten 
+      const res = await LoadBuildingsData();
+      const preparedData = res.map(item => {
+        return { value: item.id, label: item.name };
+      });
+      setBuildings(preparedData)
+      setSelectedOptionBuilding(preparedData[0])
+    } catch (err) {
+      console.error(`Error: ${err}`);
+      // setting the error state
+    } finally {
+      setLoadingBuildings(false);
+      
+    }
+    
   };
+  
+
+  const fetchData = async (building_id, date) => {
+    setLoadingData(true)
+    // Получаем строения
+    try {
+      // using await to make async code look sync and shorten 
+      const res = await loadFreeTime(building_id, date);
+      setData(res);
+    } catch (err) {
+      console.error(`Error: ${err}`);
+      // setting the error state
+    } finally {
+      setLoadingData(false);
+    }
+  };
+  
 
   useEffect(() => {
-    loadBigdata();
+    fetchBuildings();
   }, []);
+
+  useEffect(() => {
+    if(selectedOptionBuilding && selectedDate) {
+      fetchData(selectedOptionBuilding.value, selectedDate.format('YYYY-MM-DD'));
+    }
+  }, [selectedOptionBuilding, selectedDate]);
+
 
 
   const handleChangeBuild = (selected) => {
-    setSelectedOptionBuilding(selected);
-    const audience = selected.label;
-    console.log(audience);
-    const filteredData = data.filter(item => item.location.name === audience);
-    setData(filteredData);
+    setSelectedOptionBuilding(selected);    
   }
 
-  const handleChange = (selected) => {
-
-    const formattedDate = selected.format('DD.MM.YY');
-    console.log(formattedDate);
-
-    const filteredData = data.filter(item => item.date === formattedDate);
-
-    setData(filteredData);
-
-  };
+  // const handleChange = (selected) => {
+  // };
 
   const deleteReservation = () => {
 
-    if (selectedDataRow)
-    {
-    const filteredData = data.filter(item => item.id !== selectedDataRow.id);
-    setSelectedDataRow(null);
+    // if (selectedDataRow)
+    // {
+    // const filteredData = data.filter(item => item.id !== selectedDataRow.id);
+    // setSelectedDataRow(null);
 
-    setData(filteredData);
+    // setData(filteredData);
     }
 
-  };
+  
 
   const swapSelected = (code) => {
     setData(prevData => {
@@ -128,7 +132,6 @@ const EditReservation = () => {
       });
     });
   };
-
   return (
     <>
     <div className="bg-grey-bg font-sourcesanspromx-auto pb-[27px] px-[27px] md:px-[0px] relative w-full">
@@ -136,21 +139,31 @@ const EditReservation = () => {
         <Header>
             
             </Header>
-
+          
           <main className="main-block mt-10">
             <div className="login-box-table sm:w-[100%] px-[40px] py-[20px] sm:px-[0px]" >
               <div className='flex flex-row gap-10'>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <LocalizationProvider adapterLocale='ru' localeText={ruRU.components.MuiLocalizationProvider.defaultProps.localeText} dateAdapter={AdapterDayjs}>
                 <DatePicker
+                  
+                  format='DD/MM/YYYY'
                   label="Выберите дату"
                   value={selectedDate}
                   onChange={(newValue) => {
                     setSelectedDate(newValue);
-                    handleChange(newValue);
+                    // handleChange(newValue);
                   }}
                   
                 />
               </LocalizationProvider>
+              { loadingBuildings ? 
+              <Select
+                id="dropdown"
+                className='w-[259px] mb-[20px] sm:ml-[20px]'
+                styles={customStyles}
+                placeholder="Корпуса"
+              />
+             :
               <Select
                 id="dropdown"
                 
@@ -159,9 +172,11 @@ const EditReservation = () => {
                 onChange={handleChangeBuild}
                 className='w-[259px] mb-[20px] sm:ml-[20px]'
                 styles={customStyles}
-                placeholder="Аудитории"
+                placeholder="Корпуса"
               />
+              }
               </div>
+              
               <table className='table-res h-[422px] sm:max-w-[457px] md:mx-auto md:max-w-[571px]'>
                 <thead>
                   <tr>
@@ -181,15 +196,16 @@ const EditReservation = () => {
                     <th className='border-r-0 px-[80px] md:px-[50px] sm:px-[20px]'>Конец</th>
                   </tr>
                 </thead>
+                { loadingData ? <></> :
                 <tbody>
                   {data.length !== 0 ? (
                     data.map((row, index) => (
                       <tr key={row.id} onClick={() => swapSelected(index)} className={row.isSelected ? "select-row" : ""}>
                         <td className={'border-l-0 '}>{index + 1}</td>
                         <td className=''>{row.date}</td>
-                        <td className=''>{row.location.name}</td>
-                        <td className=''>{row.starting_time}:00</td>
-                        <td className='border-r-0'>{row.end_time}:00</td>
+                        <td className=''>{row.Audiences.audience_name}</td>
+                        <td className=''>{row.starting_time.substring(0, 5)}</td>
+                        <td className='border-r-0'>{row.end_time.substring(0, 5)}</td>
                       </tr>
                     ))
                   ) : (
@@ -200,8 +216,9 @@ const EditReservation = () => {
                     </tr>
                   )} 
                 </tbody>
-
+              }
               </table>
+              
 
               <div className='flex flex-row mt-[20px] gap-5 justify-end fotter-block w-full'>
                   
@@ -218,6 +235,7 @@ const EditReservation = () => {
 
             </div>
           </main>
+          
         </div>
         <ModalReservation audiences={["1225", "355", "444"]}  active={modalActive} setActive={setModalActive}>
           
@@ -226,5 +244,6 @@ const EditReservation = () => {
     </>);
   
 }
+      
 
 export default EditReservation;
