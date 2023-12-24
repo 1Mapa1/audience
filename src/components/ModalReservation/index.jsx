@@ -4,21 +4,9 @@ import { Typography} from '@mui/material'
 import { Text, Button, Img } from "components";
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { DatePicker, TimePicker, ruRU  } from '@mui/x-date-pickers';
 import dayjs from 'dayjs'
 
-
-const optionsTime = [
-    { value: 1, label: '10:00' },
-    { value: 2, label: '11:00' },
-    { value: 3, label: '12:00' },
-    { value: 4, label: '13:00' },
-    { value: 5, label: '14:00' },
-    { value: 6, label: '15:00' },
-    { value: 7, label: '16:00' },
-    { value: 8, label: '17:00' },
-    { value: 9, label: '18:00' },
-  ];
   
   const customStyles = {
     control: (provided) => ({
@@ -41,13 +29,12 @@ const optionsTime = [
 
 const ModalReservation = ({audiences, active, setActive}) => {
     const [selectedDate, setSelectedDate] = useState(dayjs());
-    const [selectedOptionStart, setSelectedOptionStart] = useState(optionsTime[0]);
-    const [selectedOptionEnd, setSelectedOptionEnd] = useState(optionsTime.at(-1));
+    const [selectedOptionStart, setSelectedOptionStart] = useState(null);
+    const [selectedOptionEnd, setSelectedOptionEnd] = useState(null);
     const [selectedOptionAudience, setSelectedOptionAudience] = useState(null);
     let audiencesData = [];
-    
     for (var i = 0; i < audiences.length; i++ ) {
-        audiencesData.push({value: i + 1, label: audiences[i]});
+        audiencesData.push({value: i + 1, label: audiences[i].audience_name});
     }
 
 
@@ -102,11 +89,11 @@ const ModalReservation = ({audiences, active, setActive}) => {
                   <Typography fontWeight={600} marginBottom={"16px"}>Дата</Typography>
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DatePicker
+                      format='DD/MM/YYYY'
                       value={selectedDate}
                       onChange={(newValue) => {
                         setSelectedDate(newValue);
                       }}
-                      
                     />
                   </LocalizationProvider>
                 </div>
@@ -124,28 +111,30 @@ const ModalReservation = ({audiences, active, setActive}) => {
                   />
                 </div>
                 <div>
-                  <Typography fontWeight={600}>Время начала</Typography>
-                  <Select
-                    id="dropdown"
-                    options={optionsTime}
-                    value={selectedOptionStart}
-                    onChange={handleChangeSatrt}
-                    styles={customStyles}
-                    menuPortalTarget={document.body}
-                    className='w-[200px] mt-[16px] mb-[8px] sm:ml-[20px]'
-                  />
-                </div>
+                  <Typography fontWeight={600} marginBottom={"16px"}>Время начала</Typography>
+                    <LocalizationProvider adapterLocale='ru' localeText={ruRU.components.MuiLocalizationProvider.defaultProps.localeText}
+                    dateAdapter={AdapterDayjs}>
+                      <TimePicker
+                        value={selectedOptionStart}
+                        ampm = {false}
+                        onChange={(newValue) => {
+                          setSelectedOptionStart(newValue);
+                        }}
+                      />
+                    </LocalizationProvider>
+                  </div>
                 <div>
-                  <Typography fontWeight={600}>Время конца</Typography>
-                  <Select
-                    id="dropdown"
-                    options={optionsTime}
-                    value={selectedOptionEnd}
-                    onChange={handleChangeEnd}
-                    styles={customStyles}
-                    menuPortalTarget={document.body}
-                    className='w-[200px] mt-[16px] mb-[8px] sm:ml-[20px] z-50'
-                  />
+                  <Typography fontWeight={600} marginBottom={"16px"}>Время конца</Typography>
+                    <LocalizationProvider adapterLocale='ru' localeText={ruRU.components.MuiLocalizationProvider.defaultProps.localeText}
+                    dateAdapter={AdapterDayjs}>
+                      <TimePicker
+                        value={selectedOptionEnd}
+                        ampm = {false}
+                        onChange={(newValue) => {
+                          selectedOptionEnd(newValue);
+                        }}
+                      />
+                    </LocalizationProvider>
                 </div>
               </div>
                 

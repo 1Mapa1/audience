@@ -11,15 +11,9 @@ import { ruRU } from '@mui/x-date-pickers';
 import 'dayjs/locale/ru';
 import { loadFreeTime } from 'repo/loadFreetime';
 import { LoadBuildingsData } from 'repo/LoadBuildingsData';
-
-// const optionsBuilding = [
-//   { value: 1, label: 'пример' },
-//   { value: 2, label: '2-й корпус' },
-//   { value: 3, label: '3-й корпус' },
-//   { value: 4, label: '4-й корпус' },
-//   { value: 5, label: '5-й корпус' },
-//   { value: 6, label: '6-й корпус' },
-// ];
+import { getAllAudience } from 'repo/getAllAudience';
+// import { fetchAllAudiencesData, getData } from 'redux/actions/pageActions';
+// import { useSelector, useDispatch } from 'react-redux';
 
 const customStyles = {
   control: (provided) => ({
@@ -50,7 +44,17 @@ const EditReservation = () => {
   const [optionsBuilding, setBuildings] = useState(null);
   const [loadingData, setLoadingData] = useState(true);
   const [loadingBuildings, setLoadingBuildings] = useState(true);
+  const [audience, setAudience] = useState([]);
 
+
+  // redux
+  // const audiencesData = useSelector(getData);
+  // const dispatch = useDispatch();
+
+  // useEffect(() => {
+  //   dispatch(fetchAllAudiencesData());
+  //   console.log(audiencesData)
+  // }, [dispatch]);
 
   const fetchBuildings = async () => {
     // Получаем строения
@@ -69,7 +73,6 @@ const EditReservation = () => {
       setLoadingBuildings(false);
       
     }
-    
   };
   
 
@@ -87,6 +90,16 @@ const EditReservation = () => {
       setLoadingData(false);
     }
   };
+
+  const fetchAudience = async () => {
+    // Получаем все аудиенции
+    try {
+      const res = await getAllAudience();
+      setAudience(res);
+    } catch (err) {
+      console.error(`Error: ${err}`);
+    }
+  };
   
 
   useEffect(() => {
@@ -101,12 +114,25 @@ const EditReservation = () => {
 
 
 
+
+
   const handleChangeBuild = (selected) => {
     setSelectedOptionBuilding(selected);    
   }
 
-  // const handleChange = (selected) => {
-  // };
+  const handleClickEdit = () => {
+    
+    
+  };
+
+  
+
+  const handleClickAdd = () => {
+    
+    fetchAudience();
+    setModalActive(true);
+    
+  };
 
   const deleteReservation = () => {
 
@@ -132,6 +158,8 @@ const EditReservation = () => {
       });
     });
   };
+
+
   return (
     <>
     <div className="bg-grey-bg font-sourcesanspromx-auto pb-[27px] px-[27px] md:px-[0px] relative w-full">
@@ -225,10 +253,10 @@ const EditReservation = () => {
                   <Button onClick={deleteReservation} type="submit" className="cursor-pointer font-semibold leading-[normal] min-w-[200px] h-[60px] text-center text-l p-[0px]">
                     Удалить
                   </Button>
-                  <Button onClick={() => setModalActive(true)} type="submit" className="cursor-pointer font-semibold leading-[normal] min-w-[200px] h-[60px] text-center text-l p-[0px]">
+                  <Button onClick={handleClickEdit} type="submit" className="cursor-pointer font-semibold leading-[normal] min-w-[200px] h-[60px] text-center text-l p-[0px]">
                     Редактировать
                   </Button>
-                  <Button onClick={() => setModalActive(true)} type="submit" className="cursor-pointer font-semibold leading-[normal] min-w-[200px] h-[60px] text-center text-l p-[0px]">
+                  <Button onClick={handleClickAdd} type="submit" className="cursor-pointer font-semibold leading-[normal] min-w-[200px] h-[60px] text-center text-l p-[0px]">
                     Добавить
                   </Button>
               </div>
@@ -237,9 +265,9 @@ const EditReservation = () => {
           </main>
           
         </div>
-        <ModalReservation audiences={["1225", "355", "444"]}  active={modalActive} setActive={setModalActive}>
+        <ModalReservation audiences={audience} active={modalActive} setActive={setModalActive}>
           
-      </ModalReservation>
+        </ModalReservation>
     </div>
     </>);
   

@@ -1,4 +1,5 @@
-import { configureStore } from '@reduxjs/toolkit';
+import { configureStore, getDefaultMiddleware  } from '@reduxjs/toolkit';
+
 import pageReducer from './reducers/pageReducer';
 
 const store = configureStore({
