@@ -2,8 +2,7 @@ import React, {useState} from 'react';
 import { Button, Header} from "components";
 // import { loadFreeTime } from 'repo/loadFreeTime';
 // import { uploadScheduleSelect } from 'repo/uploadScheduleSelect';
-import { faArrowAltCircleRight } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Link } from 'react-router-dom';
 
 
 const getStatusButton = (row) => {
@@ -30,29 +29,19 @@ const getStatusButton = (row) => {
     )
 }
 
-const RequestReservation = () => {
+const EditAudiences = () => {
 
   const [data, setData] = useState([ {
     location: {
       name: "пример"
     },
-    date: "13.12.2023",
-    starting_time: "12",
-    end_time: "18",
-    isSelected: false,
-    status: "Одобрено",
-    who: "Иванов И.И./Клубная деятельность"
+    buildimg: "1-корпус"
   }, 
   {
     location: {
       name: "пример 2"
     },
-    date: "14.12.2023",
-    starting_time: "17",
-    end_time: "18",
-    isSelected: false,
-    status: "На расмотрении",
-    who: 'Маркизат М.М./Квиз “Ураган”'
+    buildimg: "2-корпус"
   }]);
 
 
@@ -65,47 +54,53 @@ const RequestReservation = () => {
             </Header>
 
           <main className="main-block mt-10">
-            <div className="login-box-table sm:w-[100%] px-[40px] py-[40px] sm:px-[0px]" >
+            <div className="login-box-table sm:w-[100%] px-[40px] py-[20px] sm:px-[0px]" >
               
               <table className='table-res h-[500px] sm:max-w-[457px] md:mx-auto md:max-w-[571px]'>
                 <thead>
                   <tr>
-                      <th rowSpan={2} className='table-th-left px-[20px] md:px-[15px] sm:px-[10px]'>
+                      <th className='table-th-left px-[20px] md:px-[15px] sm:px-[10px]'>
                         №
                       </th>
-                      <th rowSpan={2} className='border-t-0 px-[40px] md:px-[15px] sm:px-[10px]'>
-                        Дата
+                      <th className='border-t-0 px-[40px] md:px-[15px] sm:px-[10px]'>
+                        Аудитория
                       </th>
-                      <th rowSpan={2} className='border-t-0 md:px-[50px] sm:px-[30px]'>
-                        Расположение
+                      <th className='border-t-0 md:px-[50px] sm:px-[30px]'>
+                       Корпус
                       </th>
-                      <th colSpan="2" className='border-t-0'>Доступное время</th>
-                      <th rowSpan={2} className='border-t-0 md:px-[50px] sm:px-[30px] px-[80px]'>
-                        Кто/зачем
-                      </th>
-                      <th rowSpan={2} className='table-th-right md:px-[50px] sm:px-[30px] px-[80px]'>
-                        Статус*
+                      <th className='table-th-right  px-[160px]'>
+                        Действия
                       </th>
                   </tr>
-                  <tr>
-                    <th className='px-[80px] md:px-[40px] sm:px-[20px]'>Начало</th>
-                    <th className='border-r-0 px-[80px] md:px-[40px] sm:px-[20px]'>Конец</th>
-                  </tr>
+                  
                 </thead>
                 <tbody>
                   { data.map((row, index) => (
                     <tr key={row.id} className={row.isSelected ? "select-row" : ""}>
                       <td className={'border-l-0 '}>{index + 1}</td>
-                      <td className=''>{row.date}</td>
                       <td className=''>{row.location.name}</td>
-                      <td className=''>{row.starting_time}:00</td>
-                      <td className=''>{row.end_time}:00</td>
-                      <td className='text-left px-[10px]'><span>{row.who}</span> <FontAwesomeIcon icon={faArrowAltCircleRight} style={{color: "grey", fontSize: "20px", margin: "auto"}} /></td>
-                      <td className='border-r-0'>{getStatusButton(row)}</td>
+                      <td className=''>{row.buildimg}</td>
+                      <td className='border-r-0 '>
+                        <Link to={"/detailsAudience"}>
+                        <button className='white-button mr-[10px]'>Подробнее</button>
+                        </Link>
+                        <button className='white-button mr-[10px]'>Редактировать</button>
+                        <button className='delete-button'>Удалить</button>
+                      </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
+
+              <div className='flex flex-row justify-end mt-[20px] items-center fotter-block'>
+                <div className='flex flex-row gap-5'>
+                  <Button className='px-[40px] text-[18px]'>Сделать PDF отчет</Button>
+                  <Link to={"/createaudience"}>
+                    <Button className='px-[40px] text-[18px]'>Добавить</Button>
+                  </Link>
+                </div>
+              </div>
+
             </div>
           </main>
         </div>
@@ -114,4 +109,4 @@ const RequestReservation = () => {
   
 }
 
-export default RequestReservation;
+export default EditAudiences;

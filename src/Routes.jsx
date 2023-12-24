@@ -18,6 +18,8 @@ const CreateAudience = React.lazy(() => import("pages/CreateAudience"));
 const EditReservation = React.lazy(() => import("pages/EditReservation"));
 const ShowReservation = React.lazy(() => import("pages/ShowReservation"));
 const RequestReservation = React.lazy(() => import("pages/RequestReservation"));
+const EditAudiences = React.lazy(() => import("pages/EditAudiences"));
+const DetailsAudience = React.lazy(() => import("pages/DetailsAudience"));
 const ProjectRoutes = () => {
   return (
     <React.Suspense fallback={<LoadingComponent />}>
@@ -35,8 +37,8 @@ const ProjectRoutes = () => {
             <Route path="/CreateAudience" element={<CreateAudience />} />
           </Route>
           
-
-
+          <Route path="/DetailsAudience" element={<DetailsAudience />} />
+          <Route path="/EditAudiences" element={<EditAudiences />} />
           <Route path="/RequestReservation" element={<RequestReservation />} />
           <Route path="/ShowReservation" element={<ShowReservation />} />
           <Route path="*" element={<NotFound />} />
