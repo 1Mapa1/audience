@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import Select from 'react-select';
-import { Button, Header, ModalReservation} from "components";
+import { Button, ModalEditReservation, Header, ModalReservation, ModalRemove} from "components";
 // import { loadFreeTime } from 'repo/loadFreeTime';
 // import { uploadScheduleSelect } from 'repo/uploadScheduleSelect';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -34,10 +34,10 @@ const customStyles = {
 
 
 const EditReservation = () => {
-
   const [selectedDate, setSelectedDate] = useState(dayjs());
   const [modalActive, setModalActive] = useState(false);
-
+  const [modalRemoveActive, setModalRemoveActive] = useState(false);
+  const [modalEditActive, setModalditActive] = useState(false);
   const [selectedOptionBuilding, setSelectedOptionBuilding] = useState(null);
   const [selectedDataRow, setSelectedDataRow] = useState(null);
   const [data, setData] = useState([]);
@@ -121,8 +121,7 @@ const EditReservation = () => {
   }
 
   const handleClickEdit = () => {
-    
-    
+    selectedDataRow !== null ? setModalditActive(true) : setModalditActive(false)
   };
 
   
@@ -135,13 +134,7 @@ const EditReservation = () => {
   };
 
   const deleteReservation = () => {
-
-    // if (selectedDataRow)
-    // {
-    // const filteredData = data.filter(item => item.id !== selectedDataRow.id);
-    // setSelectedDataRow(null);
-
-    // setData(filteredData);
+    selectedDataRow !== null ? setModalRemoveActive(true) : setModalRemoveActive(false)
     }
 
   
@@ -268,6 +261,17 @@ const EditReservation = () => {
         <ModalReservation audiences={audience} active={modalActive} setActive={setModalActive}>
           
         </ModalReservation>
+        {
+          selectedDataRow !== null 
+          ? <ModalEditReservation audience={selectedDataRow} active={modalEditActive} setActive={setModalditActive}></ModalEditReservation> 
+          : <></>
+        }
+        {
+          selectedDataRow !== null 
+          ? <ModalRemove audience={selectedDataRow} active={modalRemoveActive} setActive={setModalRemoveActive}></ModalRemove> 
+          : <></>
+        }
+       
     </div>
     </>);
   

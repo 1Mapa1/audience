@@ -2,6 +2,34 @@ body {
   background-color: #E5E5E5;
 }
 
+.user-header {
+  position: relative; /* Относительное позиционирование */
+  /* другие стили */
+}
+
+.dropdown-menu {
+  position: absolute; /* Абсолютное позиционирование для меню */
+  top: 100%; /* Разместить ниже родителя */
+  left: 0;
+  width: max-content;
+  background-color: #0075BB;
+  color: white;
+  padding: 10px 20px;  /* Стили для фона, границ и т.д. */
+  display: none; /* Начальное состояние скрыто */
+}
+.dropdown-menu li {
+  margin-top: 5px;
+  border-bottom: 1px solid #0075BB;
+  transition: border-bottom 0.5s;
+}
+.dropdown-menu li:hover {
+  border-bottom: 1px solid white;
+}
+
+.user-header:hover .dropdown-menu {
+  display: block; /* Отобразить при наведении */
+}
+
 .white-button {
   background-color: white;
   padding: 10px;

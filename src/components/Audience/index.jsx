@@ -1,7 +1,7 @@
 import React from "react";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
-import { Text, Img } from "components";
+import { Text, Img, Button } from "components";
 
 
 const Audience = ({audience}) => {
@@ -117,6 +117,8 @@ const Audience = ({audience}) => {
             }
             </Carousel>) : <></>
             }
+
+            <Button className="mt-10 text-[20px] px-[50px]">Забронировать</Button>
         </div>
     )
 }
