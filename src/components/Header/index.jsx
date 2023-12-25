@@ -61,7 +61,7 @@ const Header = (shadow) => {
                         )
                         
                         }
-                        {console.log(user)}
+                        
                        
                     </div>
                 </div>
