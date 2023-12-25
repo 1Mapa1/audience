@@ -1,48 +1,51 @@
-import React, {useState} from 'react';
-import { Button, Header} from "components";
+import React, {useState, useEffect} from 'react';
+import { Button, Header, SelectBuilding, Spinner} from "components";
 // import { loadFreeTime } from 'repo/loadFreeTime';
 // import { uploadScheduleSelect } from 'repo/uploadScheduleSelect';
 import { Link } from 'react-router-dom';
-
-
-const getStatusButton = (row) => {
-
-    if (row.status === "Одобрено")
-    {
-        return (
-            <span>
-            <button className='green-button select'>Одобрено</button> <button className='red-button'>Отказать</button>
-            </span>
-        )
-    }
-    if (row.status === "Отказ") {
-        return (
-            <span>
-            <button className='green-button'>Одобрить</button> <button className='red-button select'>Отказано</button>
-            </span>
-        )
-    }
-    return (
-        <span>
-        <button className='green-button select'>Одобрить</button> <button className='red-button select'>Отказать</button>
-        </span>
-    )
-}
+import { getAudienceBuilding } from 'repo/getAudienceBuilding';
+import { getAudienceBuildingFilter } from 'repo/getAudienceBuildingFilter';
 
 const EditAudiences = () => {
 
-  const [data, setData] = useState([ {
-    location: {
-      name: "пример"
-    },
-    buildimg: "1-корпус"
-  }, 
-  {
-    location: {
-      name: "пример 2"
-    },
-    buildimg: "2-корпус"
-  }]);
+  const [audiences, setAudiences] = useState([])
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    fetchAudience();
+  }, [])
+
+
+  const fetchAudience = async () => {
+    setIsLoading(true);
+    // Получаем все аудиенции
+    try {
+      const res = await getAudienceBuilding();
+      setAudiences(res);
+      console.log(audiences);
+    } catch (err) {
+      console.error(`Error: ${err}`);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const fetchData = async (building_id) => {
+    setIsLoading(true)
+    // Получаем строения
+    try {
+      // using await to make async code look sync and shorten 
+      const res = await getAudienceBuildingFilter(building_id);
+      setAudiences(res);
+    } catch (err) {
+      console.error(`Error: ${err}`);
+      // setting the error state
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  
+
 
 
   return (
@@ -55,40 +58,46 @@ const EditAudiences = () => {
 
           <main className="main-block mt-10">
             <div className="login-box-table sm:w-[100%] px-[40px] py-[20px] sm:px-[0px]" >
+              <div className='flex flex-row gap-10'>
+                <SelectBuilding fetchData={fetchData}></SelectBuilding>
+              </div>
               
               <table className='table-res h-[500px] sm:max-w-[457px] md:mx-auto md:max-w-[571px]'>
                 <thead>
                   <tr>
-                      <th className='table-th-left px-[20px] md:px-[15px] sm:px-[10px]'>
+                      <th className='table-th-left px-[20px] md:px-[15px] sm:px-[10px] py-[20px]'>
                         №
                       </th>
-                      <th className='border-t-0 px-[40px] md:px-[15px] sm:px-[10px]'>
+                      <th className='border-t-0 px-[70px] md:px-[15px] sm:px-[10px]'>
                         Аудитория
                       </th>
                       <th className='border-t-0 md:px-[50px] sm:px-[30px]'>
                        Корпус
                       </th>
-                      <th className='table-th-right  px-[160px]'>
+                      <th className={'table-th-right  px-[170px] ' + (audiences.length > 6 ? "rounded-none" : '')}>
                         Действия
                       </th>
                   </tr>
                   
                 </thead>
                 <tbody>
-                  { data.map((row, index) => (
-                    <tr key={row.id} className={row.isSelected ? "select-row" : ""}>
-                      <td className={'border-l-0 '}>{index + 1}</td>
-                      <td className=''>{row.location.name}</td>
-                      <td className=''>{row.buildimg}</td>
-                      <td className='border-r-0 '>
-                        <Link to={"/detailsAudience"}>
-                        <button className='white-button mr-[10px]'>Подробнее</button>
-                        </Link>
-                        <button className='white-button mr-[10px]'>Редактировать</button>
-                        <button className='delete-button'>Удалить</button>
-                      </td>
-                    </tr>
-                  ))}
+                  {isLoading 
+                    ? <tr><td colSpan="4" className='border-r-0'><Spinner height={400}></Spinner></td></tr>
+                    : audiences.map((row, index) => (
+                      <tr key={row.id}>
+                        <td className={'border-l-0 '}>{index + 1}</td>
+                        <td className=''>{row.audience_name}</td>
+                        <td className=''>{row.building.name}</td>
+                        <td className='border-r-0 '>
+                          <Link to={"/detailsAudience"}>
+                            <button className='white-button mr-[10px]'>Подробнее</button>
+                          </Link>
+                          <button className='white-button mr-[10px]'>Редактировать</button>
+                          <button className='delete-button'>Удалить</button>
+                        </td>
+                      </tr>
+                    ))
+                  }
                 </tbody>
               </table>
 
