@@ -27,29 +27,11 @@ import dayjs from 'dayjs'
 
 
 
-const ModalReservation = ({audiences, active, setActive}) => {
-    const [selectedDate, setSelectedDate] = useState(dayjs());
+const ModalEditReservation = ({audience, active, setActive}) => {
+    const [selectedDate, setSelectedDate] = useState(dayjs(audience.date));
     const [selectedOptionStart, setSelectedOptionStart] = useState(null);
     const [selectedOptionEnd, setSelectedOptionEnd] = useState(null);
-    const [selectedOptionAudience, setSelectedOptionAudience] = useState(null);
-    let audiencesData = [];
-    for (var i = 0; i < audiences.length; i++ ) {
-        audiencesData.push({value: i + 1, label: audiences[i].audience_name});
-    }
-
-
-    const handleChangeSatrt = (selected) => {
-        setSelectedOptionStart(selected);
-    }
-
-    const handleChangeEnd = (selected) => {
-        setSelectedOptionEnd(selected);
-    }
-
-
-    const handleChangeAudience = (selected) => {
-        setSelectedOptionAudience(selected);
-      }
+    
     return (
       <div className={active ? "modal active" : "modal"} onClick={() => setActive(false)}>
         <div className={"bg-white-A700 flex flex-col font-sourcesanspro items-center justify-start max-w-[1221px] mx-auto p-[17px] md:px-5 rounded-[50px] sm:rounded-[0px] w-full" + (active ? " modal__content active" : " modal__content")} onClick={(e) => e.stopPropagation()}>
@@ -63,7 +45,7 @@ const ModalReservation = ({audiences, active, setActive}) => {
                       className="md:text-3xl sm:text-[28px] text-3xl font-semibold text-sky-700"
                       size="txtSourceSansProSemiBold32"
                     >
-                      Добавление доступного времени аудитории
+                      Реадактирование времени аудитории
                     </Text>
                     <div className="hidden md:flex items-center cursor-pointer justify-start ml-5 md:ml-[0] md:mt-0 mt-[13px] w-6 md:w-[10px]" onClick={() => setActive(false)}>
                       <Img
@@ -93,6 +75,8 @@ const ModalReservation = ({audiences, active, setActive}) => {
                       onChange={(newValue) => {
                         setSelectedDate(newValue);
                       }}
+                      disabled
+                      
                     />
                   </LocalizationProvider>
                 </div>
@@ -100,11 +84,9 @@ const ModalReservation = ({audiences, active, setActive}) => {
                   <Typography fontWeight={600}>Аудитория</Typography>
                   <Select
                     id="dropdown"
-                    options={audiencesData}
-                    value={selectedOptionAudience}
-                    onChange={handleChangeAudience}
                     styles={customStyles}
-                    placeholder={"Аудитория..."}
+                    placeholder={audience.Audiences.audience_name}
+                    isDisabled
                     menuPortalTarget={document.body}
                     className='w-[200px] mt-[16px] mb-[8px] sm:ml-[20px]'
                   />
@@ -114,7 +96,7 @@ const ModalReservation = ({audiences, active, setActive}) => {
                     <LocalizationProvider adapterLocale='ru' localeText={ruRU.components.MuiLocalizationProvider.defaultProps.localeText}
                     dateAdapter={AdapterDayjs}>
                       <TimePicker
-                        value={selectedOptionStart}
+                        value={dayjs(audience.starting_time, 'HH:mm:ss')}
                         ampm = {false}
                         onChange={(newValue) => {
                           setSelectedOptionStart(newValue);
@@ -127,10 +109,10 @@ const ModalReservation = ({audiences, active, setActive}) => {
                     <LocalizationProvider adapterLocale='ru' localeText={ruRU.components.MuiLocalizationProvider.defaultProps.localeText}
                     dateAdapter={AdapterDayjs}>
                       <TimePicker
-                        value={selectedOptionEnd}
+                        value={dayjs(audience.end_time, 'HH:mm:ss')}
                         ampm = {false}
                         onChange={(newValue) => {
-                          selectedOptionEnd(newValue);
+                          setSelectedOptionEnd(newValue);
                         }}
                       />
                     </LocalizationProvider>
@@ -157,4 +139,4 @@ const ModalReservation = ({audiences, active, setActive}) => {
     )
   }
   
-  export { ModalReservation };
+  export { ModalEditReservation };

@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import TextField from '@mui/material/TextField';
-import { Button } from 'components';
+import { Button, Text } from 'components';
 // import { isUserConfirm } from 'repo/IsUserConfirm';
 // import useAuth from 'hooks/useAuth';
 import { useUser } from 'hooks/UserContext';
 import { isUserConfirm } from 'repo/IsUserConfirm';
-import { Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -14,6 +14,7 @@ const LoginForm = () => {
   const { setUserData } = useUser();
   const [login, setLogin] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
   const handleLoginChange = (e) => {
     setLogin(e.target.value);
@@ -29,9 +30,9 @@ const LoginForm = () => {
     if (userData) {
       setUserData(userData)
       console.log('Успешный вход');
-      <Navigate to='/' replace />
+      navigate('/');
     } else {
-      console.log('Неправильное имя пользователя или пароль');
+      document.getElementById("error-text").style.display = "block"
     }
   }
 
@@ -57,7 +58,8 @@ const LoginForm = () => {
         onChange={handlePasswordChange}
         fullWidth
       />
-      <Button type="submit" className="cursor-pointer mt-10 font-semibold leading-[normal] mb-1 min-w-[200px] text-center text-l">
+      <div className='w-[423px] my-[10px] h-[24px]'><Text className='w-full text-center hidden text-red-500' id="error-text">Вы ввели не правильный логин или пароль</Text></div>
+      <Button type="submit" className="cursor-pointer mt-[20px] font-semibold leading-[normal] mb-1 min-w-[200px] text-center text-l">
         Вход
       </Button>
     </form>
