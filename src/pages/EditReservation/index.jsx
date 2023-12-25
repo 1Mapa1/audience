@@ -94,6 +94,7 @@ const EditReservation = () => {
     try {
       const res = await getAllAudience();
       setAudience(res);
+      console.log(audience);
     } catch (err) {
       console.error(`Error: ${err}`);
     }

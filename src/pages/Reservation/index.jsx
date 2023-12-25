@@ -89,16 +89,7 @@ const Reservation = () => {
     setSelectedOptionBuilding(selected);
   }
 
-  const handleChange = (selected) => {
 
-    // const formattedDate = selected.format('DD.MM.YY');
-    // console.log(formattedDate);
-
-    // const filteredData = data.filter(item => item.date === formattedDate);
-    // console.log(filteredData);
-    // setData(filteredData);
-
-  };
 
   const swapSelected = (code) => {
     setData(prevData => {
