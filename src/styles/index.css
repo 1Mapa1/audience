@@ -32,6 +32,7 @@ body {
   position: absolute; /* Абсолютное позиционирование для меню */
   top: 100%; /* Разместить ниже родителя */
   left: 0;
+  z-index: 1000000000;
   width: max-content;
   background-color: #0075BB;
   color: white;

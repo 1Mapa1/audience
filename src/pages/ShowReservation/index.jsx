@@ -37,7 +37,7 @@ const ShowReservation = () => {
                             <Text className="text-[18px]"><span className="font-semibold mr-[10px]">Дата проведения: </span> {pageAudienceData.date}</Text>
                             <Text className="text-[18px]"><span className="font-semibold mr-[10px]">Время: </span> {pageAudienceData.starting_time}:00 - {pageAudienceData.end_time}:00</Text>
                             <Text className="text-[18px]"><span className="font-semibold mr-[10px]">Статус: </span> <span className="text-sky-500">{pageAudienceData.status}</span></Text>
-                            <Button className="w-[60%] mt-[10px]">Отменить бронь</Button>
+                            <Button className="w-[80%] mt-[10px] px-[0px]">Отменить бронь</Button>
                         </div>
                         <div className="w-[480px]">
                             <Carousel swipeable={true}

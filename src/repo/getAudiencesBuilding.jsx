@@ -1,6 +1,6 @@
 import { supabase } from "./supabaseClient";
 
-export async function getAudienceBuilding() {
+export async function getAudiencesBuilding() {
     // Запрос к базе данных Supabase для получения данных
     const { data, error } = await supabase
       .from('Audiences')

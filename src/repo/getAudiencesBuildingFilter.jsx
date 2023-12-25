@@ -1,6 +1,6 @@
 import { supabase } from "./supabaseClient";
 
-export async function getAudienceBuildingFilter(building) {
+export async function getAudiencesBuildingFilter(building) {
 // Запрос к базе данных Supabase для получения данных
 const { data, error } = await supabase
     .from('Audiences')
@@ -15,7 +15,6 @@ if (!data) {
     console.log('Пустые данные');
     return [];
 }
-console.log(12);
-console.log(data);
+
 return data;
 }

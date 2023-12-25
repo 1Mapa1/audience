@@ -3,8 +3,8 @@ import { Button, Header, SelectBuilding, Spinner} from "components";
 // import { loadFreeTime } from 'repo/loadFreeTime';
 // import { uploadScheduleSelect } from 'repo/uploadScheduleSelect';
 import { Link } from 'react-router-dom';
-import { getAudienceBuilding } from 'repo/getAudienceBuilding';
-import { getAudienceBuildingFilter } from 'repo/getAudienceBuildingFilter';
+import { getAudiencesBuilding } from 'repo/getAudiencesBuilding';
+import { getAudiencesBuildingFilter } from 'repo/getAudiencesBuildingFilter';
 
 const EditAudiences = () => {
 
@@ -20,7 +20,7 @@ const EditAudiences = () => {
     setIsLoading(true);
     // Получаем все аудиенции
     try {
-      const res = await getAudienceBuilding();
+      const res = await getAudiencesBuilding();
       setAudiences(res);
       console.log(audiences);
     } catch (err) {
@@ -35,7 +35,7 @@ const EditAudiences = () => {
     // Получаем строения
     try {
       // using await to make async code look sync and shorten 
-      const res = await getAudienceBuildingFilter(building_id);
+      const res = await getAudiencesBuildingFilter(building_id);
       setAudiences(res);
     } catch (err) {
       console.error(`Error: ${err}`);
