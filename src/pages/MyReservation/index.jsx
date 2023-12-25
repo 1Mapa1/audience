@@ -3,7 +3,7 @@ import { Button, Header} from "components";
 // import { loadFreeTime } from 'repo/loadFreeTime';
 // import { uploadScheduleSelect } from 'repo/uploadScheduleSelect';
 import { useDispatch } from 'react-redux';
-import { setReservationData } from '../../redux/actions/pageActions';
+import { setReservationData } from '../../redux_file/actions/pageActions';
 import { Link } from 'react-router-dom';
 
 

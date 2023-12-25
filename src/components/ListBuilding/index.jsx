@@ -2,7 +2,7 @@ import React from "react";
 import { Building } from "components";
 import { Link } from "react-router-dom";
 import { useDispatch } from 'react-redux';
-import { setAudienceData } from '../../redux/actions/pageActions';
+import { setAudienceData } from '../../redux_file/actions/pageActions';
 
 const ListBuilding = ({items}) => { 
 

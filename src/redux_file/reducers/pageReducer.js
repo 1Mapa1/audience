@@ -3,8 +3,7 @@ const initialState = {
     pageReservationData: null
   };
   
-  const pageReducer = (state = initialState, action) => {
-    console.log(action.type);
+export function pageReducer (state = initialState, action) {
     switch (action.type) {
       case 'SET_Reservation_Page':
         return {
@@ -27,5 +26,3 @@ const initialState = {
         return state;
     }
   };
-  
-  export default pageReducer;

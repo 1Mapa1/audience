@@ -2,20 +2,17 @@ import React from "react";
 import { Img, TextBlock, HighText, Header, Instruction, Text, Button, Building, ListBuilding} from "components";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowDown } from '@fortawesome/free-solid-svg-icons';
-import { LoadBuildingsData } from "repo/LoadBuildingsData";
 import { useState, useEffect } from "react";
+import { fetchDataIfNeeded} from "redux_file/reducers/buildingReducer";
+import { useDispatch, useSelector } from "react-redux";
 
 const Page = () => {
-  const [buildings, setBuildings] = useState([]);
-
+  const buildings = useSelector((state) => state.data.data);
+  const load = useSelector((state) => state.data.loading);
+  const dispatch = useDispatch();
   useEffect(() => {
-    const fetchData = async () => {
-      // Получаем строения
-      const result = await LoadBuildingsData();
-      setBuildings(result);
-    };
-    fetchData();
-  }, []);
+    dispatch(fetchDataIfNeeded());
+  }, [dispatch]);
 
 
   // const buildings = [
@@ -85,7 +82,7 @@ const Page = () => {
             <Text className="text-[20px] font-semibold">Или посмотрите что есть</Text>
             <div className="flex flex-col items-center gap-10">
               <Text className="text-[30px] font-bold my-12">Доступные корпуса</Text>
-              <ListBuilding items={buildings}></ListBuilding>
+              {load === 'fulfilled' ? <ListBuilding items={buildings}></ListBuilding> : <></>}
             </div>
           </div>
         </div>

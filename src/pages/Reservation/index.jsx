@@ -1,21 +1,14 @@
 import React, {useState, useEffect} from 'react';
 import Select from 'react-select';
 import { Button, Header, Modal} from "components";
-// import { loadFreeTime } from 'repo/loadFreeTime';
+import { loadFreeTime } from 'repo/loadFreetime';
 // import { uploadScheduleSelect } from 'repo/uploadScheduleSelect';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { LocalizationProvider, DatePicker, ruRU} from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
+import { fetchDataIfNeeded} from "redux_file/reducers/buildingReducer";
+import { useDispatch, useSelector } from "react-redux";
 
-const optionsBuilding = [
-  { value: 1, label: '1-й корпус' },
-  { value: 2, label: '2-й корпус' },
-  { value: 3, label: '3-й корпус' },
-  { value: 4, label: '4-й корпус' },
-  { value: 5, label: '5-й корпус' },
-  { value: 6, label: '6-й корпус' },
-];
 
 const customStyles = {
   control: (provided) => ({
@@ -36,40 +29,59 @@ const customStyles = {
 
 
 const Reservation = () => {
-
-  const [selectedDate, setSelectedDate] = useState(dayjs());
+  // состояние модального окна
   const [modalActive, setModalActive] = useState(false);
 
-  const [selectedOptionBuilding, setSelectedOptionBuilding] = useState(optionsBuilding[0]);
+  // выбранная фильтрация
+  const [selectedOptionBuilding, setSelectedOptionBuilding] = useState(null);
   const [selectedDataRow, setSelectedDataRow] = useState(null);
-  const [data, setData] = useState([ {
-    location: {
-      name: "пример"
-    },
-    date: "14.12.23",
-    starting_time: "12",
-    end_time: "18",
-    isSelected: false
-  }, 
-  {
-    location: {
-      name: "пример 2"
-    },
-    date: "15.12.23",
-    starting_time: "17",
-    end_time: "18",
-    isSelected: false
-  }]);
 
-  const loadBigdata = async () => {
-    // Тут вызывается ваша функция для получения данных
-    // const result = await loadFreeTime();
-    // setBigData(result);
-    // setData(result[0].schedule_entries)
-  };
+  // фильтрация по дате
+  const [selectedDate, setSelectedDate] = useState(dayjs());
+
+  // подгрузка строений для фильтрации
+  const optionsBuilding = useSelector((state) => state.data.data);
+  const loadingBuilding = useSelector((state) => state.data.loading);
+
+  const dispatch = useDispatch();
+  useEffect(() => {
+    if(loadingBuilding !== 'fulfilled') {
+      dispatch(fetchDataIfNeeded());
+    }
+    
+  }, [dispatch]);
 
   useEffect(() => {
-    loadBigdata();
+    if (loadingBuilding === 'fulfilled') {
+      setSelectedOptionBuilding({value: optionsBuilding[0].id, label: optionsBuilding[0].name})
+    }
+  }, [loadingBuilding]);
+
+  // подгрузка данных таблицы
+  const [data, setData] = useState([]);
+  const [loadingData, setLoadingData] = useState(true);
+  const fetchData = async (building_id, date) => {
+    setLoadingData(true)
+    try {
+      const res = await loadFreeTime(building_id, date);
+      setData(res);
+    } catch (err) {
+      console.error(`Error: ${err}`);
+    } finally {
+      setLoadingData(false);
+    }
+  };
+
+  // подгрузка данных при изминении фильтрации
+  useEffect(() => {
+    if(selectedOptionBuilding && selectedDate) {
+      fetchData(selectedOptionBuilding.value, selectedDate.format('YYYY-MM-DD'));
+    }
+  }, [selectedOptionBuilding, selectedDate]);
+
+  // загружаем начальные данные
+  useEffect(() => {
+    fetchData();
   }, []);
 
 
@@ -79,12 +91,12 @@ const Reservation = () => {
 
   const handleChange = (selected) => {
 
-    const formattedDate = selected.format('DD.MM.YY');
-    console.log(formattedDate);
+    // const formattedDate = selected.format('DD.MM.YY');
+    // console.log(formattedDate);
 
-    const filteredData = data.filter(item => item.date === formattedDate);
-    console.log(filteredData);
-    setData(filteredData);
+    // const filteredData = data.filter(item => item.date === formattedDate);
+    // console.log(filteredData);
+    // setData(filteredData);
 
   };
 
@@ -112,28 +124,37 @@ const Reservation = () => {
           <main className="main-block mt-10">
             <div className="login-box-table sm:w-[100%] px-[40px] py-[20px] sm:px-[0px]" >
               <div className='flex flex-row gap-10'>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <LocalizationProvider adapterLocale='ru' localeText={ruRU.components.MuiLocalizationProvider.defaultProps.localeText} dateAdapter={AdapterDayjs}>
                 <DatePicker
-                  
+                  format='DD/MM/YYYY'
                   label="Выберите дату"
-                  localeText={"Привект"}
                   value={selectedDate}
                   onChange={(newValue) => {
                     setSelectedDate(newValue);
-                    handleChange(newValue);
+                    // handleChange(newValue);
                   }}
-                  
                 />
               </LocalizationProvider>
+              {loadingBuilding === 'fulfilled' ? 
               <Select
                 id="dropdown"
-                options={optionsBuilding}
+                options={optionsBuilding.map(item => {
+                  return { value: item.id, label: item.name };
+                })}
                 value={selectedOptionBuilding}
                 onChange={handleChangeBuild}
                 className='w-[259px] mb-[20px] sm:ml-[20px]'
                 styles={customStyles}
-              />
+                
+              /> : 
+              <Select
+                id="dropdown"
+                className='w-[259px] mb-[20px] sm:ml-[20px]'
+                styles={customStyles}
+                placeholder="Корпуса"
+              />}
               </div>
+              {}
               <table className='table-res h-[422px] sm:max-w-[457px] md:mx-auto md:max-w-[571px]'>
                 <thead>
                   <tr>
@@ -153,15 +174,16 @@ const Reservation = () => {
                     <th className='border-r-0 px-[80px] md:px-[50px] sm:px-[20px]'>Конец</th>
                   </tr>
                 </thead>
+                { loadingData ? <></> :
                 <tbody>
                   {data.length !== 0 ? (
                     data.map((row, index) => (
                       <tr key={row.id} onClick={() => swapSelected(index)} className={row.isSelected ? "select-row" : ""}>
                         <td className={'border-l-0 '}>{index + 1}</td>
                         <td className=''>{row.date}</td>
-                        <td className=''>{row.location.name}</td>
-                        <td className=''>{row.starting_time}:00</td>
-                        <td className='border-r-0'>{row.end_time}:00</td>
+                        <td className=''>{row.Audiences.audience_name}</td>
+                        <td className=''>{row.starting_time.substring(0, 5)}</td>
+                        <td className='border-r-0'>{row.end_time.substring(0, 5)}</td>
                       </tr>
                     ))
                   ) : (
@@ -172,6 +194,7 @@ const Reservation = () => {
                     </tr>
                   )} 
                 </tbody>
+                }
 
               </table>
 
@@ -186,8 +209,8 @@ const Reservation = () => {
           </main>
         </div>
         <Modal club_data = {selectedDataRow} active={modalActive} setActive={setModalActive}>
-          
-      </Modal>
+            
+        </Modal>
     </div>
     </>);
   

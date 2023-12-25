@@ -22,7 +22,7 @@ const Modal = ({club_data, active, setActive}) => {
                     className="md:text-3xl sm:text-[28px] text-2xl font-semibold text-black-900"
                     size="txtSourceSansProSemiBold32"
                   >
-                    Бронирование аудитории «{club_data.location.name}» {club_data.date} с {club_data.starting_time}:00 по {club_data.end_time}:00
+                    Бронирование аудитории «{club_data.Audiences.audience_name}» {club_data.date} с {club_data.starting_time.substring(0, 5)} по {club_data.end_time.substring(0, 5)}
                   </Text>
                   <div className="hidden md:flex items-center cursor-pointer justify-start ml-5 md:ml-[0] md:mt-0 mt-[13px] w-6 md:w-[10px]" onClick={() => setActive(false)}>
                     <Img
