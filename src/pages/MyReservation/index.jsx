@@ -1,38 +1,44 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { Button, Header} from "components";
 // import { loadFreeTime } from 'repo/loadFreeTime';
 // import { uploadScheduleSelect } from 'repo/uploadScheduleSelect';
 import { useDispatch } from 'react-redux';
-import { setReservationData } from '../../redux_file/actions/pageActions';
+import { setReservationData } from 'redux_file/actions/pageActions';
 import { Link } from 'react-router-dom';
+import { useUser } from 'hooks/UserContext';
+import { getReservationByUser } from 'repo/getReservationByUser';
 
 
 
 const MyReservation = () => {
 
-  const dispatch = useDispatch();
-
+  // const dispatch = useDispatch();
+  
+  const [loadingData, setLoadingData] = useState(true);
+  const [data, setData] = useState([]);
+  const {user, setUserData} = useUser();
   const [selectedRow, setSelectedRow] = useState(null);
-  const [data, setData] = useState([ {
-    location: {
-      name: "пример"
-    },
-    date: "13.12.2023",
-    starting_time: "12",
-    end_time: "18",
-    isSelected: false,
-    status: "Одобрено"
-  }, 
-  {
-    location: {
-      name: "пример 2"
-    },
-    date: "14.12.2023",
-    starting_time: "17",
-    end_time: "18",
-    isSelected: false,
-    status: "На расмотрении"
-  }]);
+
+  
+  
+
+  const fetchData = async () => {
+    setLoadingData(true)
+    // Получаем брони
+    try {
+      const res = await getReservationByUser(user.data.id);
+      console.log(res)
+      setData(res)
+      
+    } catch (err) {
+      console.error(`Error: ${err}`);
+    } finally {
+      setLoadingData(false);
+    }
+  };
+  useEffect(() => {
+    fetchData()
+  }, []);
 
   const swapSelected = (code) => {
     setData(prevData =>
@@ -47,10 +53,10 @@ const MyReservation = () => {
     );
   };
 
-  const handleSendData = () => {
-    const dataToSend = selectedRow;
-    dispatch(setReservationData(dataToSend));
-  };
+  // const handleSendData = () => {
+  //   const dataToSend = selectedRow;
+  //   dispatch(setReservationData(dataToSend));
+  // };
 
   return (
     <>
@@ -85,25 +91,27 @@ const MyReservation = () => {
                     <th className='border-r-0 px-[80px] md:px-[40px] sm:px-[20px]'>Конец</th>
                   </tr>
                 </thead>
+                {loadingData ? <></> :
                 <tbody>
                   { data.map((row, index) => (
                     <tr key={row.id} onClick={() => swapSelected(index)} className={row.isSelected ? "select-row" : ""}>
                       <td className={'border-l-0 '}>{index + 1}</td>
                       <td className=''>{row.date}</td>
-                      <td className=''>{row.location.name}</td>
-                      <td className=''>{row.starting_time}:00</td>
-                      <td className=''>{row.end_time}:00</td>
-                      <td className='border-r-0'>{row.status}</td>
+                      <td className=''>{row.audience_id.audience_name}</td>
+                      <td className=''>{row.starting_time.substring(0, 5)}</td>
+                      <td className=''>{row.end_time.substring(0, 5)}</td>
+                      <td className='border-r-0'>{row.status_id.status_name}</td>
                     </tr>
                   ))}
                 </tbody>
+                }
               </table>
 
               <div className='flex flex-row justify-between mt-[20px] items-center fotter-block'>
                 <p className='text-xs text-zinc-400 w-[40%]'>* Брони, на которые ответили отказом или была отменена, пропадут из таблицы в течении трех дней</p>
                 <div className='flex flex-row gap-5'>
                 <Link to="/showreservation">
-                  <Button onClick={handleSendData} className="cursor-pointer font-semibold leading-[normal] min-w-[200px] h-[60px] text-center text-l p-[0px]">
+                  <Button  className="cursor-pointer font-semibold leading-[normal] min-w-[200px] h-[60px] text-center text-l p-[0px]">
                     Подробнее
                   </Button>
                   </Link>

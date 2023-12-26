@@ -27,7 +27,7 @@ export async function recordTimetable(reservation_data, event_id) {
       date: reservation_data.date,
       starting_time: reservation_data.starting_time,
       end_time: reservation_data.end_time,
-      location_id: reservation_data.location_id,
+      audience_id: reservation_data.audience_id,
       status_id: 1,
       event_id: event_id
     }).select();
