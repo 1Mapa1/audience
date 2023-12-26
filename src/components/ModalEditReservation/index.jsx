@@ -6,6 +6,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker, TimePicker, ruRU  } from '@mui/x-date-pickers';
 import dayjs from 'dayjs'
+import { editFreeTime } from 'repo/editFreetime';
 
   
   const customStyles = {
@@ -29,9 +30,50 @@ import dayjs from 'dayjs'
 
 const ModalEditReservation = ({audience, active, setActive}) => {
     const [selectedDate, setSelectedDate] = useState(dayjs(audience.date));
-    const [selectedOptionStart, setSelectedOptionStart] = useState(null);
-    const [selectedOptionEnd, setSelectedOptionEnd] = useState(null);
+    const [selectedOptionStart, setSelectedOptionStart] = useState(dayjs(audience.starting_time, 'HH:mm:ss'));
+    const [selectedOptionEnd, setSelectedOptionEnd] = useState(dayjs(audience.end_time, 'HH:mm:ss'));
+
+    const formatData = (time) => {
+      const selectedTime = new Date(time);
+      const hours = selectedTime.getHours();
+      const minutes = selectedTime.getMinutes();
+      return `${hours}:${minutes}:00`
+    }
+
+    const handleSubmit = async (event) => {
+      event.preventDefault();
+      console.log(selectedOptionStart, selectedOptionEnd)
+      if (!selectedOptionStart || !selectedOptionEnd) {
+        alert("заполните форму")
+        // document.getElementById("error-text").style.display = "block"
+        return;
+      }
+      const response = await editFreeTime({
+        row_id: audience.id,
+        starting_time: formatData(selectedOptionStart),
+        end_time: formatData(selectedOptionEnd)
+      })
+      console.log(response)  
+      if(response.status = 200) {
+        alert("Данные успешно редактированы")
+        window.location.reload();
+      }
+      else {
+        alert("Ошибка")
+      }
+    }
+
     
+    
+    const handleChangeStart = (selected) => {
+      setSelectedOptionStart(selected);
+    }
+
+    const handleChangeEnd = (selected) => {
+
+      setSelectedOptionEnd(selected);
+    }
+
     return (
       <div className={active ? "modal active" : "modal"} onClick={() => setActive(false)}>
         <div className={"bg-white-A700 flex flex-col font-sourcesanspro items-center justify-start max-w-[1221px] mx-auto p-[17px] md:px-5 rounded-[50px] sm:rounded-[0px] w-full" + (active ? " modal__content active" : " modal__content")} onClick={(e) => e.stopPropagation()}>
@@ -65,6 +107,7 @@ const ModalEditReservation = ({audience, active, setActive}) => {
                   />
                 </div>
               </div>
+              <form onSubmit={handleSubmit}>
               <div className='flex flex-row mt-[40px] gap-5'>
                 <div>
                   <Typography fontWeight={600} marginBottom={"16px"}>Дата</Typography>
@@ -96,11 +139,9 @@ const ModalEditReservation = ({audience, active, setActive}) => {
                     <LocalizationProvider adapterLocale='ru' localeText={ruRU.components.MuiLocalizationProvider.defaultProps.localeText}
                     dateAdapter={AdapterDayjs}>
                       <TimePicker
-                        value={dayjs(audience.starting_time, 'HH:mm:ss')}
+                        value={selectedOptionStart}
                         ampm = {false}
-                        onChange={(newValue) => {
-                          setSelectedOptionStart(newValue);
-                        }}
+                        onChange={handleChangeStart}
                       />
                     </LocalizationProvider>
                   </div>
@@ -109,27 +150,23 @@ const ModalEditReservation = ({audience, active, setActive}) => {
                     <LocalizationProvider adapterLocale='ru' localeText={ruRU.components.MuiLocalizationProvider.defaultProps.localeText}
                     dateAdapter={AdapterDayjs}>
                       <TimePicker
-                        value={dayjs(audience.end_time, 'HH:mm:ss')}
+                        value={selectedOptionEnd}
                         ampm = {false}
-                        onChange={(newValue) => {
-                          setSelectedOptionEnd(newValue);
-                        }}
+                        onChange={handleChangeEnd}
                       />
                     </LocalizationProvider>
                 </div>
               </div>
-                
+              </form>  
               <div className="flex flex-row font-inter gap-10 items-center md:ml-[0] mt-[40px] ">
                 
                 <Button onClick={() => setActive(false)}
                   className="cursor-pointer font-semibold leading-[normal] mb-1 min-w-[244px] text-center text-xl">
                   Отменить
                 </Button>
-                <Button onClick={
-                  function handleClick() {
-                  }} 
+                <Button onClick={handleSubmit} 
                   className="cursor-pointer font-semibold leading-[normal] mb-1 min-w-[244px] text-center text-xl">
-                  Добавить
+                  Редактировать
                 </Button>
               </div>
             </div>

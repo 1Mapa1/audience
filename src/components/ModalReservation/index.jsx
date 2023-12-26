@@ -6,6 +6,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker, TimePicker, ruRU  } from '@mui/x-date-pickers';
 import dayjs from 'dayjs'
+import { addFreeTime } from 'repo/addFreetime';
 
   
   const customStyles = {
@@ -32,24 +33,49 @@ const ModalReservation = ({audiences, active, setActive}) => {
     const [selectedOptionStart, setSelectedOptionStart] = useState(null);
     const [selectedOptionEnd, setSelectedOptionEnd] = useState(null);
     const [selectedOptionAudience, setSelectedOptionAudience] = useState(null);
-    let audiencesData = [];
-    for (var i = 0; i < audiences.length; i++ ) {
-        audiencesData.push({value: i + 1, label: audiences[i].audience_name});
+    
+    const audiencesData  = audiences.map(item => {
+      return { value: item.id, label: item.audience_name};
+    })
+    const handleSubmit = async (event) => {
+      event.preventDefault();
+      console.log(selectedOptionStart, selectedOptionEnd, selectedOptionAudience)
+      if (!selectedOptionStart || !selectedOptionEnd || !selectedOptionAudience) {
+        alert("заполните форму")
+        // document.getElementById("error-text").style.display = "block"
+        return;
+      }
+      const data = await addFreeTime({
+        date: selectedDate.format('YYYY-MM-DD'),
+        starting_time: selectedOptionStart,
+        end_time: selectedOptionEnd,
+        audience_id: selectedOptionAudience.value })
+      console.log(data)  
+      if(data.status = 201) {
+        alert("Данные записаны")
+        window.location.reload();
+      }
+      else alert("Ошибка")
     }
 
-
-    const handleChangeSatrt = (selected) => {
-        setSelectedOptionStart(selected);
+    const handleChangeStart = (selected) => {
+      const selectedTime = new Date(selected);
+      const hours = selectedTime.getHours();
+      const minutes = selectedTime.getMinutes();
+      setSelectedOptionStart(`${hours}:${minutes}:00`);
     }
 
     const handleChangeEnd = (selected) => {
-        setSelectedOptionEnd(selected);
+      const selectedTime = new Date(selected);
+      const hours = selectedTime.getHours();
+      const minutes = selectedTime.getMinutes();
+      setSelectedOptionEnd(`${hours}:${minutes}:00`);
     }
 
-
     const handleChangeAudience = (selected) => {
-        setSelectedOptionAudience(selected);
-      }
+      console.log(selected)
+      setSelectedOptionAudience(selected);
+    }
     return (
       <div className={active ? "modal active" : "modal"} onClick={() => setActive(false)}>
         <div className={"bg-white-A700 flex flex-col font-sourcesanspro items-center justify-start max-w-[1221px] mx-auto p-[17px] md:px-5 rounded-[50px] sm:rounded-[0px] w-full" + (active ? " modal__content active" : " modal__content")} onClick={(e) => e.stopPropagation()}>
@@ -83,10 +109,12 @@ const ModalReservation = ({audiences, active, setActive}) => {
                   />
                 </div>
               </div>
+              <form onSubmit={handleSubmit}>
               <div className='flex flex-row mt-[40px] gap-5'>
+              
                 <div>
                   <Typography fontWeight={600} marginBottom={"16px"}>Дата</Typography>
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <LocalizationProvider adapterLocale='ru' localeText={ruRU.components.MuiLocalizationProvider.defaultProps.localeText} dateAdapter={AdapterDayjs}>
                     <DatePicker
                       format='DD/MM/YYYY'
                       value={selectedDate}
@@ -116,9 +144,7 @@ const ModalReservation = ({audiences, active, setActive}) => {
                       <TimePicker
                         value={selectedOptionStart}
                         ampm = {false}
-                        onChange={(newValue) => {
-                          setSelectedOptionStart(newValue);
-                        }}
+                        onChange={handleChangeStart}
                       />
                     </LocalizationProvider>
                   </div>
@@ -129,23 +155,20 @@ const ModalReservation = ({audiences, active, setActive}) => {
                       <TimePicker
                         value={selectedOptionEnd}
                         ampm = {false}
-                        onChange={(newValue) => {
-                          selectedOptionEnd(newValue);
-                        }}
+                        onChange={handleChangeEnd}
                       />
                     </LocalizationProvider>
                 </div>
-              </div>
                 
+              </div>
+              </form>
               <div className="flex flex-row font-inter gap-10 items-center md:ml-[0] mt-[40px] ">
                 
                 <Button onClick={() => setActive(false)}
                   className="cursor-pointer font-semibold leading-[normal] mb-1 min-w-[244px] text-center text-xl">
                   Отменить
                 </Button>
-                <Button onClick={
-                  function handleClick() {
-                  }} 
+                <Button type='submit' onClick={handleSubmit} 
                   className="cursor-pointer font-semibold leading-[normal] mb-1 min-w-[244px] text-center text-xl">
                   Добавить
                 </Button>

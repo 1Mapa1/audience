@@ -16,6 +16,7 @@ const Audience = () => {
     try {
       // using await to make async code look sync and shorten 
       const res = await LoadAudienceByBuilding(1);
+      console.log(res)
       setAudiences(res);
     } catch (err) {
       console.error(`Error: ${err}`);

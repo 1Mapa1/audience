@@ -10,6 +10,8 @@ import 'dayjs/locale/ru';
 import { loadFreeTime } from 'repo/loadFreetime';
 import { LoadBuildingsData } from 'repo/LoadBuildingsData';
 import { getAllAudience } from 'repo/getAllAudience';
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchDataIfNeeded } from 'redux_file/reducers/buildingReducer';
 // import { fetchAllAudiencesData, getData } from 'redux/actions/pageActions';
 // import { useSelector, useDispatch } from 'react-redux';
 
@@ -36,42 +38,37 @@ const EditReservation = () => {
   const [modalActive, setModalActive] = useState(false);
   const [modalRemoveActive, setModalRemoveActive] = useState(false);
   const [modalEditActive, setModalditActive] = useState(false);
-  const [selectedOptionBuilding, setSelectedOptionBuilding] = useState(null);
+
   const [selectedDataRow, setSelectedDataRow] = useState(null);
   const [data, setData] = useState([]);
-  const [optionsBuilding, setBuildings] = useState(null);
+
   const [loadingData, setLoadingData] = useState(true);
-  const [loadingBuildings, setLoadingBuildings] = useState(true);
   const [audience, setAudience] = useState([]);
 
 
   // redux
-  // const audiencesData = useSelector(getData);
-  // const dispatch = useDispatch();
+ // настроки фильтрации
+  const [selectedOptionBuilding, setSelectedOptionBuilding] = useState(null);
+  const optionsBuilding = useSelector((state) => state.data.data);
+  const loadingBuilding = useSelector((state) => state.data.loading);
+  const dispatch = useDispatch();
 
-  // useEffect(() => {
-  //   dispatch(fetchAllAudiencesData());
-  //   console.log(audiencesData)
-  // }, [dispatch]);
-
-  const fetchBuildings = async () => {
-    // Получаем строения
-    try {
-      // using await to make async code look sync and shorten 
-      const res = await LoadBuildingsData();
-      const preparedData = res.map(item => {
-        return { value: item.id, label: item.name };
-      });
-      setBuildings(preparedData)
-      setSelectedOptionBuilding(preparedData[0])
-    } catch (err) {
-      console.error(`Error: ${err}`);
-      // setting the error state
-    } finally {
-      setLoadingBuildings(false);
-      
+  useEffect(() => {
+    if(loadingBuilding !== 'fulfilled') {
+      dispatch(fetchDataIfNeeded());
     }
-  };
+  }, [dispatch]);
+  useEffect(() => {
+    if (loadingBuilding === 'fulfilled') {
+      setSelectedOptionBuilding({value: optionsBuilding[0].id, label: optionsBuilding[0].name})
+    }
+  }, [loadingBuilding]);
+
+  useEffect(() => {
+    if(selectedOptionBuilding && selectedDate) {
+      fetchData(selectedOptionBuilding.value, selectedDate.format('YYYY-MM-DD'));
+    }
+  }, [selectedOptionBuilding, selectedDate]);
   
 
   const fetchData = async (building_id, date) => {
@@ -100,10 +97,6 @@ const EditReservation = () => {
     }
   };
   
-
-  useEffect(() => {
-    fetchBuildings();
-  }, []);
 
   useEffect(() => {
     if(selectedOptionBuilding && selectedDate) {
@@ -163,6 +156,7 @@ const EditReservation = () => {
           <main className="main-block mt-10">
             <div className="login-box-table sm:w-[100%] px-[40px] py-[20px] sm:px-[0px]" >
               <div className='flex flex-row gap-10'>
+              
               <LocalizationProvider adapterLocale='ru' localeText={ruRU.components.MuiLocalizationProvider.defaultProps.localeText} dateAdapter={AdapterDayjs}>
                 <DatePicker
                   
@@ -176,25 +170,28 @@ const EditReservation = () => {
                   
                 />
               </LocalizationProvider>
-              { loadingBuildings ? 
-              <Select
-                id="dropdown"
-                className='w-[259px] mb-[20px] sm:ml-[20px]'
-                styles={customStyles}
-                placeholder="Корпуса"
-              />
-             :
-              <Select
-                id="dropdown"
-                
-                options={optionsBuilding}
-                value={selectedOptionBuilding}
-                onChange={handleChangeBuild}
-                className='w-[259px] mb-[20px] sm:ml-[20px]'
-                styles={customStyles}
-                placeholder="Корпуса"
-              />
-              }
+              { loadingBuilding === 'fulfilled' ? 
+                <Select
+                  id="dropdown"
+                  
+                  options={optionsBuilding.map(item => {
+                    return { value: item.id, label: item.name };
+                  })}
+                  value={selectedOptionBuilding}
+                  onChange={handleChangeBuild}
+                  className='w-[259px] mb-[20px] sm:ml-[20px]'
+                  styles={customStyles}
+                  placeholder="Корпуса"
+                />
+                :
+                <Select
+                  id="dropdown"
+                  className='w-[259px] mb-[20px] sm:ml-[20px]'
+                  styles={customStyles}
+                  placeholder="Корпуса"
+                />
+                }
+              
               </div>
               
               <table className='table-res h-[422px] sm:max-w-[457px] md:mx-auto md:max-w-[571px]'>

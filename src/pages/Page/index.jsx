@@ -8,12 +8,15 @@ import { useDispatch, useSelector } from "react-redux";
 
 const Page = () => {
   const buildings = useSelector((state) => state.data.data);
-  const load = useSelector((state) => state.data.loading);
+  const loadingBuilding = useSelector((state) => state.data.loading);
+  
   const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(fetchDataIfNeeded());
-  }, [dispatch]);
 
+  useEffect(() => {
+    if(loadingBuilding !== 'fulfilled') {
+      dispatch(fetchDataIfNeeded());
+    }
+  }, [dispatch]);
 
   // const buildings = [
   //   {
@@ -82,7 +85,7 @@ const Page = () => {
             <Text className="text-[20px] font-semibold">Или посмотрите что есть</Text>
             <div className="flex flex-col items-center gap-10">
               <Text className="text-[30px] font-bold my-12">Доступные корпуса</Text>
-              {load === 'fulfilled' ? <ListBuilding items={buildings}></ListBuilding> : <></>}
+              {loadingBuilding === 'fulfilled' ? <ListBuilding items={buildings}></ListBuilding> : <></>}
             </div>
           </div>
         </div>

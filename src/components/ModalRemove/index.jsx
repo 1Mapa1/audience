@@ -1,9 +1,22 @@
 import React from 'react';
 import { Text, Button, Img } from "components";
+import { deleteFreeTime } from 'repo/deleteFreeTime';
 
 
 const ModalRemove = ({audience, active, setActive}) => {
-    console.log(audience);
+  console.log(audience)
+  const handleDelete = async () => {
+    const response = await deleteFreeTime(audience.id)
+    console.log(response)
+    if(response.status = 200) {
+      alert("Данные успешно удалены")
+      window.location.reload();
+    }
+    else {
+      alert("Ошибка")
+    }
+  }
+    console.log(audience.id);
     return (
       <div className={active ? "modal active" : "modal"} onClick={() => setActive(false)}>
         <div className={"bg-white-A700 flex flex-col font-sourcesanspro items-center justify-start max-w-[1221px] mx-auto p-[17px] md:px-5 rounded-[50px] sm:rounded-[0px] w-full" + (active ? " modal__content active" : " modal__content")} onClick={(e) => e.stopPropagation()}>
@@ -45,9 +58,7 @@ const ModalRemove = ({audience, active, setActive}) => {
                   className="cursor-pointer font-semibold leading-[normal] mb-1 w-[150px] text-center text-xl">
                   Нет
                 </Button>
-                <Button onClick={
-                  function handleClick() {
-                  }} 
+                <Button onClick={handleDelete} 
                   className="cursor-pointer font-semibold leading-[normal] mb-1 w-[150px] text-center text-xl bg-red-600">
                   Да
                 </Button>

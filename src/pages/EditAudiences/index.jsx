@@ -1,34 +1,55 @@
 import React, {useState, useEffect} from 'react';
 import { Button, Header, SelectBuilding, Spinner} from "components";
+import Select from 'react-select';
 // import { loadFreeTime } from 'repo/loadFreeTime';
 // import { uploadScheduleSelect } from 'repo/uploadScheduleSelect';
 import { Link } from 'react-router-dom';
-import { getAudiencesBuilding } from 'repo/getAudiencesBuilding';
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchDataIfNeeded } from 'redux_file/reducers/buildingReducer';
 import { getAudiencesBuildingFilter } from 'repo/getAudiencesBuildingFilter';
+
+const customStyles = {
+  control: (provided) => ({
+    ...provided,
+    height: '56px',
+    minHeight: '56px',
+  }),
+  valueContainer: (provided) => ({
+    ...provided,
+    height: '56px',
+  }),
+  input: (provided) => ({
+    ...provided,
+    position: 'absolute',
+  }),
+};
 
 const EditAudiences = () => {
 
   const [audiences, setAudiences] = useState([])
   const [isLoading, setIsLoading] = useState(false);
 
+  // настроки фильтрации
+  const [selectedOptionBuilding, setSelectedOptionBuilding] = useState(null);
+  const optionsBuilding = useSelector((state) => state.data.data);
+  const loadingBuilding = useSelector((state) => state.data.loading);
+  const dispatch = useDispatch();
+
   useEffect(() => {
-    fetchAudience();
-  }, [])
-
-
-  const fetchAudience = async () => {
-    setIsLoading(true);
-    // Получаем все аудиенции
-    try {
-      const res = await getAudiencesBuilding();
-      setAudiences(res);
-      console.log(audiences);
-    } catch (err) {
-      console.error(`Error: ${err}`);
-    } finally {
-      setIsLoading(false);
+    if(loadingBuilding !== 'fulfilled') {
+      dispatch(fetchDataIfNeeded());
     }
-  };
+  }, [dispatch]);
+  useEffect(() => {
+    if (loadingBuilding === 'fulfilled') {
+      setSelectedOptionBuilding({value: optionsBuilding[0].id, label: optionsBuilding[0].name})
+    }
+  }, [loadingBuilding]);  
+  useEffect(() => {
+    if(selectedOptionBuilding) {
+        fetchData(selectedOptionBuilding.value);
+    }
+  }, [selectedOptionBuilding]);
 
   const fetchData = async (building_id) => {
     setIsLoading(true)
@@ -45,6 +66,9 @@ const EditAudiences = () => {
     }
   };
   
+  const handleChangeBuild = (selected) => {
+    setSelectedOptionBuilding(selected);    
+  }
 
 
 
@@ -53,13 +77,34 @@ const EditAudiences = () => {
     <div className="bg-grey-bg font-sourcesanspromx-auto pb-[27px] px-[27px] md:px-[0px] relative w-full">
         <div className="font-inter flex items-center justify-center h-[100vh]  max-w-[1360px] mx-auto w-full z-[1] body-login">
         <Header>
-            
             </Header>
 
           <main className="main-block mt-10">
             <div className="login-box-table sm:w-[100%] px-[40px] py-[20px] sm:px-[0px]" >
               <div className='flex flex-row gap-10'>
-                <SelectBuilding fetchData={fetchData}></SelectBuilding>
+              <div>
+                {loadingBuilding === 'fulfilled' ? 
+                      <Select
+                      id="dropdown"
+                      options={optionsBuilding.map(item => {
+                        return { value: item.id, label: item.name };
+                      })}
+                      value={selectedOptionBuilding}
+                      onChange={handleChangeBuild}
+                      className='w-[259px] mb-[20px] sm:ml-[20px]'
+                      styles={customStyles}
+                      placeholder="Корпуса"
+                    />
+                    
+                  :
+                    <Select
+                    id="dropdown"
+                    className='w-[259px] mb-[20px] sm:ml-[20px]'
+                    styles={customStyles}
+                    placeholder="Корпуса"
+                  />
+                  }
+                  </div>
               </div>
               
               <table className='table-res h-[500px] sm:max-w-[457px] md:mx-auto md:max-w-[571px]'>

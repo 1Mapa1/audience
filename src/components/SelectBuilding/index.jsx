@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from "react";
 import Select from 'react-select';
-import { LoadBuildingsData } from 'repo/LoadBuildingsData';
-
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchDataIfNeeded } from 'redux_file/reducers/buildingReducer';
 
 const customStyles = {
     control: (provided) => ({
@@ -21,36 +21,27 @@ const customStyles = {
 
 const SelectBuilding = ({fetchData}) => {
 
-    const [selectedOptionBuilding, setSelectedOptionBuilding] = useState(null);
-  const [optionsBuilding, setBuildings] = useState(null);
-  const [loadingBuildings, setLoadingBuildings] = useState(true);
-
-  const fetchBuildings = async () => {
-    // Получаем строения
-    try {
-      // using await to make async code look sync and shorten 
-      const res = await LoadBuildingsData();
-      const preparedData = res.map(item => {
-        return { value: item.id, label: item.name };
-      });
-      setBuildings(preparedData)
-      setSelectedOptionBuilding(null)
-    } catch (err) {
-      console.error(`Error: ${err}`);
-      // setting the error state
-    } finally {
-      setLoadingBuildings(false);
-      
-    }
-  };
+  const [selectedOptionBuilding, setSelectedOptionBuilding] = useState(null);
+  const optionsBuilding = useSelector((state) => state.data.data);
+  const loadingBuilding = useSelector((state) => state.data.loading);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    fetchBuildings();
-  }, []);
+    if(loadingBuilding !== 'fulfilled') {
+      dispatch(fetchDataIfNeeded());
+    }
+    
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (loadingBuilding === 'fulfilled') {
+      setSelectedOptionBuilding({value: optionsBuilding[0].id, label: optionsBuilding[0].name})
+    }
+  }, [loadingBuilding]);  
   
   useEffect(() => {
     if(selectedOptionBuilding) {
-        fetchData(selectedOptionBuilding);
+        fetchData(selectedOptionBuilding.value);
     }
   }, [selectedOptionBuilding]);
 
@@ -60,23 +51,26 @@ const SelectBuilding = ({fetchData}) => {
 
     return (
         <div>
-        { loadingBuildings ? 
-            <Select
+        {loadingBuilding === 'fulfilled' ? 
+              <Select
               id="dropdown"
-              className='w-[259px] mb-[20px] sm:ml-[20px]'
-              styles={customStyles}
-              placeholder="Корпуса"
-            />
-          :
-            <Select
-              id="dropdown"
-              options={optionsBuilding}
+              options={optionsBuilding.map(item => {
+                return { value: item.id, label: item.name };
+              })}
               value={selectedOptionBuilding}
               onChange={handleChangeBuild}
               className='w-[259px] mb-[20px] sm:ml-[20px]'
               styles={customStyles}
               placeholder="Корпуса"
             />
+            
+          :
+            <Select
+            id="dropdown"
+            className='w-[259px] mb-[20px] sm:ml-[20px]'
+            styles={customStyles}
+            placeholder="Корпуса"
+          />
           }
           </div>
     )
