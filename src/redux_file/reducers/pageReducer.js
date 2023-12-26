@@ -15,11 +15,7 @@ export function pageReducer (state = initialState, action) {
           ...state,
           pageAudienceData: action.payload
         };
-        case "All_Audiences":
-          return {
-            ...state,
-            allAudiencesData: action.payload
-          };
+
 
       // другие действия и их обработка
       default:

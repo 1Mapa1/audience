@@ -9,7 +9,7 @@ export async function getReservationByUser(user_id) {
       date,
       starting_time,
       end_time,
-      audience_id(id, audience_name),
+      audience_id(id, audience_name, images_links, building(id, name)),
       status_id(id, status_name),
       event_id!inner(id, name, responsible_id)
       `)

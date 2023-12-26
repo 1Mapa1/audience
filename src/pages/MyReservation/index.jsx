@@ -12,7 +12,7 @@ import { getReservationByUser } from 'repo/getReservationByUser';
 
 const MyReservation = () => {
 
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
   
   const [loadingData, setLoadingData] = useState(true);
   const [data, setData] = useState([]);
@@ -53,10 +53,10 @@ const MyReservation = () => {
     );
   };
 
-  // const handleSendData = () => {
-  //   const dataToSend = selectedRow;
-  //   dispatch(setReservationData(dataToSend));
-  // };
+  const handleSendData = () => {
+    const dataToSend = selectedRow;
+    dispatch(setReservationData(dataToSend));
+  };
 
   return (
     <>
@@ -111,7 +111,7 @@ const MyReservation = () => {
                 <p className='text-xs text-zinc-400 w-[40%]'>* Брони, на которые ответили отказом или была отменена, пропадут из таблицы в течении трех дней</p>
                 <div className='flex flex-row gap-5'>
                 <Link to="/showreservation">
-                  <Button  className="cursor-pointer font-semibold leading-[normal] min-w-[200px] h-[60px] text-center text-l p-[0px]">
+                  <Button onClick={handleSendData} className="cursor-pointer font-semibold leading-[normal] min-w-[200px] h-[60px] text-center text-l p-[0px]">
                     Подробнее
                   </Button>
                   </Link>

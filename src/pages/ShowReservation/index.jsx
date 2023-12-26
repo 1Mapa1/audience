@@ -2,12 +2,13 @@ import React from "react";
 import Carousel from "react-multi-carousel";
 import { Img, Text, Header, Button, LoadingImg} from "components";
 import { useSelector } from 'react-redux';
+import { cancelReservation } from "repo/cancelReservation";
 
 
 const ShowReservation = () => {
 
-    const pageAudienceData = useSelector(state => state.page.pageReservationData);
-    console.log(pageAudienceData.starting_time); // Обратите внимание на правильное имя свойства
+    const pageAudienceData = useSelector(state => state.page.pageReservationData); // Обратите внимание на правильное имя свойства
+    console.log(pageAudienceData)
     const responsive = {
         desktop: {
           breakpoint: { max: 3000, min: 1024 },
@@ -16,7 +17,17 @@ const ShowReservation = () => {
       };
 
 
-    const imgs = ["images/img_121.png", "images/img_121.png", "images/img_121.png", "images/img_121.png"];
+    const handleCancelReservation = async () => {
+        const response = await cancelReservation(pageAudienceData.id);
+        console.log(response)
+        if(response.status = 200) {
+            alert("Бронь отменена")
+            
+          }
+          else {
+            alert("Ошибка")
+          }
+    }
 
     return (
         <>
@@ -32,12 +43,12 @@ const ShowReservation = () => {
                     
                     <div className="flex flex-row w-full justify-between items-center">
                         <div className="flex flex-col gap-3">
-                            <Text className="text-[18px]"><span className="font-semibold mr-[10px]">Корпус: </span> {pageAudienceData.location.name}</Text>
-                            <Text className="text-[18px]"><span className="font-semibold mr-[10px]">Аудитория: </span> {pageAudienceData.location.name}</Text>
+                            <Text className="text-[18px]"><span className="font-semibold mr-[10px]">Корпус: </span> {pageAudienceData.audience_id.building.name}</Text>
+                            <Text className="text-[18px]"><span className="font-semibold mr-[10px]">Аудитория: </span> {pageAudienceData.audience_id.audience_name}</Text>
                             <Text className="text-[18px]"><span className="font-semibold mr-[10px]">Дата проведения: </span> {pageAudienceData.date}</Text>
-                            <Text className="text-[18px]"><span className="font-semibold mr-[10px]">Время: </span> {pageAudienceData.starting_time}:00 - {pageAudienceData.end_time}:00</Text>
-                            <Text className="text-[18px]"><span className="font-semibold mr-[10px]">Статус: </span> <span className="text-sky-500">{pageAudienceData.status}</span></Text>
-                            <Button className="w-[80%] mt-[10px] px-[0px]">Отменить бронь</Button>
+                            <Text className="text-[18px]"><span className="font-semibold mr-[10px]">Время: </span> {pageAudienceData.starting_time.substring(0, 5)} - {pageAudienceData.end_time.substring(0, 5)}</Text>
+                            <Text className="text-[18px]"><span className="font-semibold mr-[10px]">Статус: </span> <span className="text-sky-500">{pageAudienceData.status_id.status_name}</span></Text>
+                            <Button onClick={handleCancelReservation} className="w-[80%] mt-[10px] px-[0px]">Отменить бронь</Button>
                         </div>
                         <div className="w-[480px]">
                             <Carousel swipeable={true}
@@ -53,7 +64,7 @@ const ShowReservation = () => {
                                 itemClass="rounded-[20px]" 
                                 className="w-full items-start" >
                                 {
-                                    imgs.map((img) => {
+                                    pageAudienceData.audience_id.images_links.map((img) => {
                                         return(<Img
                                             src={img} 
                                             className="h-[300px] rounded-[20px] mx-auto">

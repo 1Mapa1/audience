@@ -14,12 +14,3 @@ export const setAudienceData = data => {
   };
 };
 
-export const saveAllAudiences = (data) => ({
-  type: "All_Audiences",
-  payload: data
-});
-
-export const saveBuildings = (data) => ({
-  type: "Buildings",
-  payload: data
-});
