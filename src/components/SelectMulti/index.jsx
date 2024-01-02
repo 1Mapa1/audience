@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Select from 'react-select';
 import Typography from '@mui/material/Typography';
 
@@ -48,10 +48,17 @@ const customStyles = {
     }),
   };
 
-const SelectMultiEquipment = () => {
+const SelectMultiEquipment = ({text, type_audience_id, onMiltiFormExtraChange}) => {
+  const [selectedEquipment, setSelectedEquipment] = useState([])
+
+  const handleChange = (event) => {
+    setSelectedEquipment(event)
+    onMiltiFormExtraChange(event)
+  };
+
   return (
     <div>
-        <Typography variant="h7">Спец. оборудование</Typography>
+        <Typography variant="h7">{text}</Typography>
         <Select
             isMulti
             name="colors"
@@ -61,6 +68,7 @@ const SelectMultiEquipment = () => {
             classNamePrefix="select"
             placeholder={"Выберите оборудование"}
             menuPlacement="top"
+            onChange={handleChange}
         />
     </div>
   )

@@ -1,4 +1,4 @@
-import React, {useState, useRef} from "react";
+import React, {useState, useRef, useEffect} from "react";
 import { Img, Button } from "components";
 import Carousel from "react-multi-carousel";
 
@@ -9,15 +9,22 @@ const responsive = {
     },
   };
 
-const LoadingImg = () => { 
+const LoadingImg = ({onImagesChange}) => { 
 
-    const [images, setImages] = useState([]);
+  const [images, setImages] = useState([]);
+  const [upload_images, setUploadImages] = useState([]);
   const [activeIndex, setActiveIndex] = useState(null);
   const fileInputRef = useRef(null);
-  const handleImageChange = (e) => {
-    if (e.target.files && e.target.files[0]) {
-      let img = e.target.files[0];
+
+  useEffect(() => {
+    onImagesChange(upload_images); // Вызовите обработчик после монтирования компонента
+  }, [upload_images]);
+
+  const handleImageChange = (event) => {
+    if (event.target.files && event.target.files[0]) {
+      let img = event.target.files[0];
       setImages([...images, URL.createObjectURL(img)]);
+      setUploadImages([...upload_images, img])
     }
   };
 

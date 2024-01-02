@@ -14,8 +14,6 @@ export async function getReservationByUser(user_id) {
       event_id!inner(id, name, responsible_id)
       `)
       .eq('event_id.responsible_id', user_id)
-      
-      
     if (error) {
       console.error('Ошибка при получении данных из базы данных Supabase:', error);
       return [];

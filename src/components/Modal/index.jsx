@@ -11,6 +11,7 @@ const Modal = ({club_data, active, setActive}) => {
   console.log(club_data)
   const {user, setUserData} = useUser();
   const [formData, setFormData] = useState({ activity: '', people_count: '' , description: ''});
+  
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setFormData({ ...formData, [name]: value });
